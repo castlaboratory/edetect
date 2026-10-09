@@ -76,6 +76,14 @@ the [package site](https://castlaboratory.github.io/edetect/) work
 through the industrial datasets of `shewhartr`: tablet weights, bottle
 filling, insurance claims, solder defects and an oven with drift.
 
+## How it works
+
+![Architecture of edetect: design layer, e-value engine, state and
+outputs](reference/figures/architecture.svg)
+
+![Workflow of edetect: design once, update per observation, alarm with
+an audit trail](reference/figures/workflow.svg)
+
 ## Guarantee
 
 For a design with target `arl`, every pre-change distribution in the

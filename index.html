@@ -119,6 +119,12 @@
 <p>Lower-level functions give full control: <code><a href="reference/edetect_design.html">edetect_design()</a></code> fixes the pre-change class, the direction, the detector type (SR or CUSUM) and the mixture of post-change shifts; <code><a href="reference/edetect_init.html">edetect_init()</a></code> and <code><a href="reference/edetect_update.html">edetect_update()</a></code> run it one observation at a time; <code><a href="reference/edetect_report.html">edetect_report()</a></code>, <code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy()</a></code>, <code><a href="https://generics.r-lib.org/reference/glance.html" class="external-link">glance()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> read the result; <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> simulates run lengths and detection delays of a design. The vignettes on the <a href="https://castlaboratory.github.io/edetect/">package site</a> work through the industrial datasets of <code>shewhartr</code>: tablet weights, bottle filling, insurance claims, solder defects and an oven with drift.</p>
 </div>
 <div class="section level2">
+<h2 id="how-it-works">How it works<a class="anchor" aria-label="anchor" href="#how-it-works"></a>
+</h2>
+<p><img src="reference/figures/architecture.svg" alt="Architecture of edetect: design layer, e-value engine, state and outputs" width="100%"></p>
+<p><img src="reference/figures/workflow.svg" alt="Workflow of edetect: design once, update per observation, alarm with an audit trail" width="100%"></p>
+</div>
+<div class="section level2">
 <h2 id="guarantee">Guarantee<a class="anchor" aria-label="anchor" href="#guarantee"></a>
 </h2>
 <p>For a design with target <code>arl</code>, every pre-change distribution in the declared class gives an expected time to a false alarm of at least <code>arl</code>, and a probability of a false alarm by any time <code>t</code> of at most <code>t / arl</code> (Ramdas, 2026). The classes are <em>bounded</em> (known bounds, nothing else), <em>sub-Gaussian</em> (declared scale), <em>Bernoulli</em> (p chart; dependence within a subgroup allowed given the conditional probabilities) and <em>Poisson</em> (c and u charts; no overdispersion). The price is detection delay, which the mixture of shifts and <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> let you measure before monitoring.</p>
