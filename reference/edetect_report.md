@@ -40,5 +40,7 @@ edetect_report(state)
 #> dependence within a subgroup is allowed.
 #> • The centre was declared by the user.
 #> • Observations arrive in time order and none was dropped or imputed.
+#> • Under these assumptions the expected time to a false alarm is at least 100,
+#> and the probability of a false alarm by any time t is at most t/100.
 #> edetect 0.1.0, R version 4.6.1 (2026-06-24)
 ```

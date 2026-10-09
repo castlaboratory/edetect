@@ -60,8 +60,10 @@ edetect_design(
 - type:
 
   `"sr"` (Shiryaev–Roberts type, a sum of e-processes started at every
-  time) or `"cusum"` (CUSUM type, a maximum). Both are e-detectors;
-  `"sr"` is the default.
+  time) or `"cusum"` (CUSUM type, a maximum). Both are e-detectors and
+  both use the threshold `arl`, which for the CUSUM type is valid but
+  conservative (Shin, Ramdas and Rinaldo, 2024, Section 2.5); `"sr"` is
+  the default.
 
 - evalue:
 
@@ -97,14 +99,21 @@ An object of class `edetect_design`.
 
 The guarantee is distribution-free within the class: for every
 pre-change distribution in it, the expected time to a false alarm is at
-least `arl` (Shin, Ramdas and Rinaldo, 2024). The price is paid in
-detection delay, which depends on the alternatives the mixture covers.
+least `arl` (Shin, Ramdas and Rinaldo, 2024, Theorem 2.4), and the
+probability of a false alarm by any time `t`, including data-dependent
+monitoring horizons, is at most `t / arl` (Ramdas, 2026). The price is
+paid in detection delay, which depends on the alternatives the mixture
+covers.
 
 ## References
 
 Shin, J., Ramdas, A. and Rinaldo, A. (2024). E-detectors: a
 nonparametric framework for sequential change detection. *The New
 England Journal of Statistics in Data Science*, 2(2), 229–260.
+[doi:10.51387/23-NEJSDS51](https://doi.org/10.51387/23-NEJSDS51)
+
+Ramdas, A. (2026). Universality of e-detectors for ARL control.
+arXiv:2608.12660.
 
 ## Examples
 

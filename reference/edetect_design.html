@@ -23,8 +23,18 @@ average run length (ARL) to a false alarm."><meta property="og:image" content="h
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link" href="../articles/index.html">Articles</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/edetect.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Charts</h6></li>
+    <li><a class="dropdown-item" href="../articles/attribute-charts.html">Attribute charts: p, c and u</a></li>
+    <li><a class="dropdown-item" href="../articles/regression-chart.html">Regression chart for non-stationary processes</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Design</h6></li>
+    <li><a class="dropdown-item" href="../articles/run-lengths.html">Run lengths and detection delays</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -108,8 +118,10 @@ deviation is used and recorded as an assumption.</p></dd>
 
 <dt id="arg-type">type<a class="anchor" aria-label="anchor" href="#arg-type"></a></dt>
 <dd><p><code>"sr"</code> (Shiryaev–Roberts type, a sum of e-processes started at
-every time) or <code>"cusum"</code> (CUSUM type, a maximum). Both are e-detectors;
-<code>"sr"</code> is the default.</p></dd>
+every time) or <code>"cusum"</code> (CUSUM type, a maximum). Both are e-detectors and
+both use the threshold <code>arl</code>, which for the CUSUM type is valid but
+conservative (Shin, Ramdas and Rinaldo, 2024, Section 2.5); <code>"sr"</code> is the
+default.</p></dd>
 
 
 <dt id="arg-evalue">evalue<a class="anchor" aria-label="anchor" href="#arg-evalue"></a></dt>
@@ -147,14 +159,19 @@ design and in every report.</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The guarantee is distribution-free within the class: for every pre-change
 distribution in it, the expected time to a false alarm is at least <code>arl</code>
-(Shin, Ramdas and Rinaldo, 2024). The price is paid in detection delay,
-which depends on the alternatives the mixture covers.</p>
+(Shin, Ramdas and Rinaldo, 2024, Theorem 2.4), and the probability of a false
+alarm by any time <code>t</code>, including data-dependent monitoring horizons, is at
+most <code>t / arl</code> (Ramdas, 2026). The price is paid in detection delay, which
+depends on the alternatives the mixture covers.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Shin, J., Ramdas, A. and Rinaldo, A. (2024). E-detectors: a
 nonparametric framework for sequential change detection. <em>The New England
-Journal of Statistics in Data Science</em>, 2(2), 229–260.</p>
+Journal of Statistics in Data Science</em>, 2(2), 229–260.
+<a href="https://doi.org/10.51387/23-NEJSDS51" class="external-link">doi:10.51387/23-NEJSDS51</a></p>
+<p>Ramdas, A. (2026). Universality of e-detectors for ARL control.
+arXiv:2608.12660.</p>
     </div>
 
     <div class="section level2">

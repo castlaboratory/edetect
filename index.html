@@ -39,8 +39,20 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="articles/edetect.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
-<li class="nav-item"><a class="nav-link" href="articles/index.html">Articles</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Charts</h6></li>
+    <li><a class="dropdown-item" href="articles/attribute-charts.html">Attribute charts: p, c and u</a></li>
+    <li><a class="dropdown-item" href="articles/regression-chart.html">Regression chart for non-stationary processes</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><h6 class="dropdown-header" data-toc-skip>Design</h6></li>
+    <li><a class="dropdown-item" href="articles/run-lengths.html">Run lengths and detection delays</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -104,12 +116,12 @@
 <span><span class="fu"><a href="reference/edetect_c.html">edetect_c</a></span><span class="op">(</span><span class="va">counts</span>, phase1 <span class="op">=</span> <span class="va">counts_in_control</span>, arl <span class="op">=</span> <span class="fl">370</span><span class="op">)</span>        <span class="co"># counts per unit</span></span>
 <span><span class="fu"><a href="reference/edetect_u.html">edetect_u</a></span><span class="op">(</span><span class="va">counts</span>, n <span class="op">=</span> <span class="va">exposure</span>, center <span class="op">=</span> <span class="fl">1.5</span>, arl <span class="op">=</span> <span class="fl">370</span><span class="op">)</span>        <span class="co"># counts per unit exposure</span></span>
 <span><span class="fu"><a href="reference/edetect_regression.html">edetect_regression</a></span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">x</span>, phase1 <span class="op">=</span> <span class="va">d1</span>, phase2 <span class="op">=</span> <span class="va">d2</span>, arl <span class="op">=</span> <span class="fl">370</span><span class="op">)</span>  <span class="co"># residuals of a Phase I model</span></span></code></pre></div>
-<p>Lower-level functions give full control: <code><a href="reference/edetect_design.html">edetect_design()</a></code> fixes the pre-change class, the direction, the detector type (SR or CUSUM) and the mixture of post-change shifts; <code><a href="reference/edetect_init.html">edetect_init()</a></code> and <code><a href="reference/edetect_update.html">edetect_update()</a></code> run it one observation at a time; <code><a href="reference/edetect_report.html">edetect_report()</a></code>, <code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy()</a></code>, <code><a href="https://generics.r-lib.org/reference/glance.html" class="external-link">glance()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> read the result; <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> simulates run lengths and detection delays of a design.</p>
+<p>Lower-level functions give full control: <code><a href="reference/edetect_design.html">edetect_design()</a></code> fixes the pre-change class, the direction, the detector type (SR or CUSUM) and the mixture of post-change shifts; <code><a href="reference/edetect_init.html">edetect_init()</a></code> and <code><a href="reference/edetect_update.html">edetect_update()</a></code> run it one observation at a time; <code><a href="reference/edetect_report.html">edetect_report()</a></code>, <code><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy()</a></code>, <code><a href="https://generics.r-lib.org/reference/glance.html" class="external-link">glance()</a></code> and <code><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot()</a></code> read the result; <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> simulates run lengths and detection delays of a design. The vignettes on the <a href="https://castlaboratory.github.io/edetect/">package site</a> work through the industrial datasets of <code>shewhartr</code>: tablet weights, bottle filling, insurance claims, solder defects and an oven with drift.</p>
 </div>
 <div class="section level2">
 <h2 id="guarantee">Guarantee<a class="anchor" aria-label="anchor" href="#guarantee"></a>
 </h2>
-<p>For a design with target <code>arl</code>, every pre-change distribution in the declared class gives an expected time to a false alarm of at least <code>arl</code>. The classes are <em>bounded</em> (known bounds, nothing else), <em>sub-Gaussian</em> (declared scale), <em>Bernoulli</em> (p chart; dependence within a subgroup allowed given the conditional probabilities) and <em>Poisson</em> (c and u charts; no overdispersion). The price is detection delay, which the mixture of shifts and <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> let you measure before monitoring.</p>
+<p>For a design with target <code>arl</code>, every pre-change distribution in the declared class gives an expected time to a false alarm of at least <code>arl</code>, and a probability of a false alarm by any time <code>t</code> of at most <code>t / arl</code> (Ramdas, 2026). The classes are <em>bounded</em> (known bounds, nothing else), <em>sub-Gaussian</em> (declared scale), <em>Bernoulli</em> (p chart; dependence within a subgroup allowed given the conditional probabilities) and <em>Poisson</em> (c and u charts; no overdispersion). The price is detection delay, which the mixture of shifts and <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> let you measure before monitoring.</p>
 </div>
 <div class="section level2">
 <h2 id="related-software">Related software<a class="anchor" aria-label="anchor" href="#related-software"></a>
@@ -119,6 +131,7 @@
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
+<p>Ramdas, A. (2026). Universality of e-detectors for ARL control. arXiv:2608.12660.</p>
 <p>Shin, J., Ramdas, A. and Rinaldo, A. (2024). E-detectors: a nonparametric framework for sequential change detection. <em>The New England Journal of Statistics in Data Science</em>, 2(2), 229–260.</p>
 </div>
 <div class="section level2">
