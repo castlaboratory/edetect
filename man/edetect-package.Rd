@@ -6,11 +6,14 @@
 \alias{edetect-package}
 \title{edetect: Anytime-Valid Control Charts with E-Detectors}
 \description{
+\if{html}{\figure{logo.svg}{options: style='float: right' alt='logo' width='120'}}
+
 Sequential change detection for process monitoring with e-detectors: nonparametric, anytime-valid analogues of the CUSUM and Shiryaev-Roberts charts with a guaranteed average run length under bounded or sub-psi pre-change distributions, Phase I/Phase II workflow, attribute (p, c, u) and regression charts, and auditable alarm reports.
 }
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://castlaboratory.github.io/edetect/}
   \item \url{https://github.com/castlaboratory/edetect}
   \item Report bugs at \url{https://github.com/castlaboratory/edetect/issues}
 }

@@ -1,0 +1,41 @@
+url: https://castlaboratory.github.io/edetect/
+
+template:
+  bootstrap: 5
+  light-switch: true
+  bslib:
+    primary: "#B4432B"
+    base_font: {google: "Source Sans 3"}
+    heading_font: {google: "Source Sans 3"}
+    code_font: {google: "JetBrains Mono"}
+
+development:
+  mode: auto
+
+authors:
+  André Leite:
+    href: https://castlab.org
+  Raydonal Ospina:
+    href: https://castlab.org
+  Cristiano Ferraz:
+    href: https://castlab.org
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [search, lightswitch, github]
+
+reference:
+- title: Design and run a detector
+  contents: [edetect_classes, edetect_design, edetect_init, edetect_update, edetect_restart]
+- title: Charts
+  contents: [edetect_x, edetect_p, edetect_c, edetect_u, edetect_regression]
+- title: Results
+  contents: [edetect_alarm, edetect_report, tidy.edetect_chart, glance.edetect_chart, autoplot.edetect_chart]
+- title: Run-length simulation
+  contents: [edetect_arl]
+- title: Re-exports
+  contents: [reexports]
+articles:
+- title: Vignettes
+  contents: [getting-started]

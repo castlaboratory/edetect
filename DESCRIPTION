@@ -16,14 +16,26 @@ Description: Sequential change detection for process monitoring with
     workflow, attribute (p, c, u) and regression charts, and auditable
     alarm reports.
 License: GPL (>= 3)
-URL: https://github.com/castlaboratory/edetect
+URL: https://castlaboratory.github.io/edetect/, https://github.com/castlaboratory/edetect
 BugReports: https://github.com/castlaboratory/edetect/issues
 Encoding: UTF-8
 Language: en-GB
 Depends:
     R (>= 4.1)
+Imports:
+    cli (>= 3.6.0),
+    generics,
+    ggplot2 (>= 3.5.0),
+    rlang (>= 1.1.0),
+    stats,
+    tibble (>= 3.2.0),
+    utils
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 8.0.0
 Suggests: 
+    knitr,
+    rmarkdown,
+    shewhartr,
     testthat (>= 3.0.0)
+VignetteBuilder: knitr
 Config/testthat/edition: 3
