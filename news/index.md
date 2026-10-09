@@ -1,13 +1,16 @@
 # Changelog
 
-## edetect 0.0.0.9000
+## edetect 0.1.0
 
-- First implementation of the e-detector engine:
+First CRAN release.
+
+- E-detector engine:
   [`edetect_design()`](https://castlaboratory.github.io/edetect/reference/edetect_design.md)
   (pre-change classes `bounded`, `subgaussian`, `bernoulli`, `poisson`;
-  directions up, down, both; Shiryaev–Roberts and CUSUM types; mixture
-  over post-change shifts; optional Phase I estimation of the centre and
-  scale, recorded as an assumption),
+  directions up, down, both; Shiryaev-Roberts and CUSUM types; mixture
+  over post-change shifts mapped to the optimal bet of each class;
+  optional Phase I estimation of the centre and scale, recorded as an
+  assumption),
   [`edetect_init()`](https://castlaboratory.github.io/edetect/reference/edetect_init.md),
   [`edetect_update()`](https://castlaboratory.github.io/edetect/reference/edetect_update.md),
   [`edetect_restart()`](https://castlaboratory.github.io/edetect/reference/edetect_restart.md),
@@ -24,4 +27,4 @@
 - [`edetect_arl()`](https://castlaboratory.github.io/edetect/reference/edetect_arl.md):
   Monte Carlo run lengths (ARL without a change, delay and false alarms
   with a change), vectorised across replications.
-- Getting-started vignette; pkgdown site; hex logo.
+- Getting-started vignette.

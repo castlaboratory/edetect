@@ -18,8 +18,8 @@
 <link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Anytime-Valid Control Charts with E-Detectors">
-<meta name="description" content="Sequential change detection for process monitoring with e-detectors: nonparametric, anytime-valid analogues of the CUSUM and Shiryaev-Roberts charts with a guaranteed average run length under bounded or sub-psi pre-change distributions, Phase I/Phase II workflow, attribute (p, c, u) and regression charts, and auditable alarm reports.">
-<meta property="og:description" content="Sequential change detection for process monitoring with e-detectors: nonparametric, anytime-valid analogues of the CUSUM and Shiryaev-Roberts charts with a guaranteed average run length under bounded or sub-psi pre-change distributions, Phase I/Phase II workflow, attribute (p, c, u) and regression charts, and auditable alarm reports.">
+<meta name="description" content="Sequential change detection for process monitoring with e-detectors (Shin, Ramdas and Rinaldo, 2024, &lt;doi:10.51387/23-NEJSDS51&gt;): nonparametric, anytime-valid analogues of the CUSUM and Shiryaev-Roberts charts whose average run length to a false alarm is guaranteed for every distribution in a declared pre-change class (bounded, sub-Gaussian, Bernoulli or Poisson observations). Phase I/Phase II workflow, individual, p, c, u and regression charts, run-length simulation and auditable alarm reports.">
+<meta property="og:description" content="Sequential change detection for process monitoring with e-detectors (Shin, Ramdas and Rinaldo, 2024, &lt;doi:10.51387/23-NEJSDS51&gt;): nonparametric, anytime-valid analogues of the CUSUM and Shiryaev-Roberts charts whose average run length to a false alarm is guaranteed for every distribution in a declared pre-change class (bounded, sub-Gaussian, Bernoulli or Poisson observations). Phase I/Phase II workflow, individual, p, c, u and regression charts, run-length simulation and auditable alarm reports.">
 <meta property="og:image" content="https://castlaboratory.github.io/edetect/logo.svg">
 </head>
 <body>
@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="index.html">edetect</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -109,7 +109,7 @@
 <div class="section level2">
 <h2 id="guarantee">Guarantee<a class="anchor" aria-label="anchor" href="#guarantee"></a>
 </h2>
-<p>For a design with target <code>arl</code>, every pre-change distribution in the declared class gives an expected time to a false alarm of at least <code>arl</code>. The classes are <em>bounded</em> (known bounds, nothing else), <em>sub-Gaussian</em> (declared scale), <em>Bernoulli</em> (p chart; any dependence within a subgroup) and <em>Poisson</em> (c and u charts; no overdispersion). The price is detection delay, which the mixture of shifts and <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> let you measure before monitoring.</p>
+<p>For a design with target <code>arl</code>, every pre-change distribution in the declared class gives an expected time to a false alarm of at least <code>arl</code>. The classes are <em>bounded</em> (known bounds, nothing else), <em>sub-Gaussian</em> (declared scale), <em>Bernoulli</em> (p chart; dependence within a subgroup allowed given the conditional probabilities) and <em>Poisson</em> (c and u charts; no overdispersion). The price is detection delay, which the mixture of shifts and <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> let you measure before monitoring.</p>
 </div>
 <div class="section level2">
 <h2 id="related-software">Related software<a class="anchor" aria-label="anchor" href="#related-software"></a>
@@ -163,13 +163,7 @@
 </ul>
 </div>
 
-<div class="dev-status">
-<h2 data-toc-skip>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://github.com/castlaboratory/edetect/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/castlaboratory/edetect/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-</ul>
-</div>
+
 
   </aside>
 </div>

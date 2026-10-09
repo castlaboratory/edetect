@@ -28,7 +28,8 @@ A character vector of class names.
   class.
 
 - `"bernoulli"`: counts of successes in subgroups of size `n`, each
-  trial with success probability at most/at least/equal to `center`; any
+  trial with conditional success probability (given the earlier trials
+  of the subgroup) at most/at least/equal to `center`; beyond that,
   dependence within a subgroup is allowed. This is the p chart.
 
 - `"poisson"`: counts with exposure `n` whose moment generating function

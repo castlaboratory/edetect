@@ -36,9 +36,9 @@ edetect_report(state)
 #> 
 #> ── Assumptions ──
 #> 
-#> • Pre-change trials have success probability at most 0.05; dependence within a
-#> subgroup is allowed.
+#> • Pre-change trials have conditional success probability at most 0.05; other
+#> dependence within a subgroup is allowed.
 #> • The centre was declared by the user.
 #> • Observations arrive in time order and none was dropped or imputed.
-#> edetect 0.0.0.9000, R version 4.6.1 (2026-06-24)
+#> edetect 0.1.0, R version 4.6.1 (2026-06-24)
 ```

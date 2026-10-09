@@ -71,5 +71,5 @@ edetect_arl(design, pre = function(n) rnorm(n), post = function(n) rnorm(n, 1),
 #> # A tibble: 1 × 7
 #>   delay_mean    se false_alarm censored change_at n_rep max_t
 #>        <dbl> <dbl>       <dbl>    <dbl>     <int> <int> <int>
-#> 1       5.87 0.433        0.08        0        20    50   500
+#> 1       5.48 0.362        0.08        0        20    50   500
 ```

@@ -11,7 +11,7 @@ average run length guarantee holds for every distribution in the class."><meta p
 
     <a class="navbar-brand me-2" href="../index.html">edetect</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -68,8 +68,9 @@ assumed. E-values: <code>"betting"</code> (tight, default) or <code>"hoeffding"<
 declared scale <code>sigma</code>. Gaussian data with standard deviation <code>sigma</code> is the
 boundary case; heavier tails violate the class.</p></li>
 <li><p><code>"bernoulli"</code>: counts of successes in subgroups of size <code>n</code>, each trial with
-success probability at most/at least/equal to <code>center</code>; any dependence within
-a subgroup is allowed. This is the p chart.</p></li>
+conditional success probability (given the earlier trials of the subgroup) at
+most/at least/equal to <code>center</code>; beyond that, dependence within a subgroup is
+allowed. This is the p chart.</p></li>
 <li><p><code>"poisson"</code>: counts with exposure <code>n</code> whose moment generating function is at
 most that of a Poisson with rate <code>center</code> per unit exposure (Poisson and
 underdispersed counts; overdispersed counts violate the class). These are the

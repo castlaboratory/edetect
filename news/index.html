@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">edetect</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,13 +39,14 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.0.9000" id="edetect-0009000">edetect 0.0.0.9000<a class="anchor" aria-label="anchor" href="#edetect-0009000"></a></h2>
-<ul><li>First implementation of the e-detector engine: <code><a href="../reference/edetect_design.html">edetect_design()</a></code> (pre-change classes <code>bounded</code>, <code>subgaussian</code>, <code>bernoulli</code>, <code>poisson</code>; directions up, down, both; Shiryaev–Roberts and CUSUM types; mixture over post-change shifts; optional Phase I estimation of the centre and scale, recorded as an assumption), <code><a href="../reference/edetect_init.html">edetect_init()</a></code>, <code><a href="../reference/edetect_update.html">edetect_update()</a></code>, <code><a href="../reference/edetect_restart.html">edetect_restart()</a></code>, <code><a href="../reference/edetect_alarm.html">edetect_alarm()</a></code>, <code><a href="../reference/edetect_report.html">edetect_report()</a></code>.</li>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="edetect-010">edetect 0.1.0<a class="anchor" aria-label="anchor" href="#edetect-010"></a></h2>
+<p>First CRAN release.</p>
+<ul><li>E-detector engine: <code><a href="../reference/edetect_design.html">edetect_design()</a></code> (pre-change classes <code>bounded</code>, <code>subgaussian</code>, <code>bernoulli</code>, <code>poisson</code>; directions up, down, both; Shiryaev-Roberts and CUSUM types; mixture over post-change shifts mapped to the optimal bet of each class; optional Phase I estimation of the centre and scale, recorded as an assumption), <code><a href="../reference/edetect_init.html">edetect_init()</a></code>, <code><a href="../reference/edetect_update.html">edetect_update()</a></code>, <code><a href="../reference/edetect_restart.html">edetect_restart()</a></code>, <code><a href="../reference/edetect_alarm.html">edetect_alarm()</a></code>, <code><a href="../reference/edetect_report.html">edetect_report()</a></code>.</li>
 <li>Charts: <code><a href="../reference/edetect_x.html">edetect_x()</a></code>, <code><a href="../reference/edetect_p.html">edetect_p()</a></code>, <code><a href="../reference/edetect_c.html">edetect_c()</a></code>, <code><a href="../reference/edetect_u.html">edetect_u()</a></code>, <code><a href="../reference/edetect_regression.html">edetect_regression()</a></code>.</li>
 <li>S3 class <code>edetect_chart</code> with <code>print</code>, <code>summary</code>, <code>tidy</code>, <code>glance</code>, <code>autoplot</code>.</li>
 <li>
 <code><a href="../reference/edetect_arl.html">edetect_arl()</a></code>: Monte Carlo run lengths (ARL without a change, delay and false alarms with a change), vectorised across replications.</li>
-<li>Getting-started vignette; pkgdown site; hex logo.</li>
+<li>Getting-started vignette.</li>
 </ul></div>
   </main></div>
 

@@ -1,10 +1,14 @@
 # edetect: Anytime-Valid Control Charts with E-Detectors
 
-Sequential change detection for process monitoring with e-detectors:
+Sequential change detection for process monitoring with e-detectors
+(Shin, Ramdas and Rinaldo, 2024,
+[doi:10.51387/23-NEJSDS51](https://doi.org/10.51387/23-NEJSDS51) ):
 nonparametric, anytime-valid analogues of the CUSUM and Shiryaev-Roberts
-charts with a guaranteed average run length under bounded or sub-psi
-pre-change distributions, Phase I/Phase II workflow, attribute (p, c, u)
-and regression charts, and auditable alarm reports.
+charts whose average run length to a false alarm is guaranteed for every
+distribution in a declared pre-change class (bounded, sub-Gaussian,
+Bernoulli or Poisson observations). Phase I/Phase II workflow,
+individual, p, c, u and regression charts, run-length simulation and
+auditable alarm reports.
 
 ## See also
 

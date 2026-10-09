@@ -76,7 +76,7 @@ edetect_report(chart)
 #> assumed).
 #> • The centre was declared by the user.
 #> • Observations arrive in time order and none was dropped or imputed.
-#> edetect 0.0.0.9000, R version 4.6.1 (2026-06-24)
+#> edetect 0.1.0, R version 4.6.1 (2026-06-24)
 head(tidy(chart))
 #> # A tibble: 6 × 9
 #>       t     x     n log_evalue evidence evidence_cusum threshold change_estimate
@@ -138,7 +138,9 @@ autoplot(p_chart)
 
 With the daily COVID-19 deaths of Recife from the `shewhartr` package, a
 c chart with the first four weeks as Phase I asks when the count left
-its early level.
+its early level. Epidemic counts are overdispersed, so the sub-Poisson
+class is an illustration here, not a guarantee; a bounded class with a
+declared maximum would be the honest choice for such data.
 
 ``` r
 
@@ -193,7 +195,7 @@ edetect_arl(design, pre = function(n) rnorm(n), post = function(n) rnorm(n, 1),
 #> # A tibble: 1 × 7
 #>   delay_mean    se false_alarm censored change_at n_rep max_t
 #>        <dbl> <dbl>       <dbl>    <dbl>     <int> <int> <int>
-#> 1       6.70 0.446        0.12        0        50   100   500
+#> 1       6.38 0.379        0.13        0        50   100   500
 ```
 
 ## References

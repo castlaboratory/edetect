@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">edetect</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,7 +140,7 @@ was assumed, how the detector was built and what happened, and
 <span><span class="co">#&gt; assumed).</span></span>
 <span><span class="co">#&gt; • The centre was declared by the user.</span></span>
 <span><span class="co">#&gt; • Observations arrive in time order and none was dropped or imputed.</span></span>
-<span><span class="co">#&gt; <span style="font-style: italic;">edetect 0.0.0.9000, R version 4.6.1 (2026-06-24)</span></span></span>
+<span><span class="co">#&gt; <span style="font-style: italic;">edetect 0.1.0, R version 4.6.1 (2026-06-24)</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">chart</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 9</span></span></span>
 <span><span class="co">#&gt;       t     x     n log_evalue evidence evidence_cusum threshold change_estimate</span></span>
@@ -195,7 +195,10 @@ with the declared rate”, which excludes overdispersion.</p>
 <p><img src="getting-started_files/figure-html/attributes-1.png" class="r-plt" alt="" width="672"></p>
 <p>With the daily COVID-19 deaths of Recife from the
 <code>shewhartr</code> package, a c chart with the first four weeks as
-Phase I asks when the count left its early level.</p>
+Phase I asks when the count left its early level. Epidemic counts are
+overdispersed, so the sub-Poisson class is an illustration here, not a
+guarantee; a bounded class with a declared maximum would be the honest
+choice for such data.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">deaths</span> <span class="op">&lt;-</span> <span class="fu">shewhartr</span><span class="fu">::</span><span class="va"><a href="https://castlaboratory.github.io/shewhartr/reference/cvd_recife.html" class="external-link">cvd_recife</a></span><span class="op">$</span><span class="va">new_deaths</span></span>
 <span><span class="va">c_chart</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/edetect_c.html">edetect_c</a></span><span class="op">(</span><span class="va">deaths</span><span class="op">[</span><span class="op">-</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">28</span><span class="op">)</span><span class="op">]</span>, phase1 <span class="op">=</span> <span class="va">deaths</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">28</span><span class="op">]</span>, arl <span class="op">=</span> <span class="fl">370</span>, direction <span class="op">=</span> <span class="st">"up"</span><span class="op">)</span></span>
@@ -243,7 +246,7 @@ a change it estimates the detection delay.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 7</span></span></span>
 <span><span class="co">#&gt;   delay_mean    se false_alarm censored change_at n_rep max_t</span></span>
 <span><span class="co">#&gt;        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       6.70 0.446        0.12        0        50   100   500</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       6.38 0.379        0.13        0        50   100   500</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
