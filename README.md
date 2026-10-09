@@ -66,6 +66,12 @@ detection delays of a design. The vignettes on the [package site](https://castla
 work through the industrial datasets of `shewhartr`: tablet weights, bottle filling,
 insurance claims, solder defects and an oven with drift.
 
+## How it works
+
+<img src="man/figures/architecture.svg" alt="Architecture of edetect: design layer, e-value engine, state and outputs" width="100%" />
+
+<img src="man/figures/workflow.svg" alt="Workflow of edetect: design once, update per observation, alarm with an audit trail" width="100%" />
+
 ## Guarantee
 
 For a design with target `arl`, every pre-change distribution in the declared
