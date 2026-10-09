@@ -46,8 +46,8 @@ edetect_arl <- function(design, pre, post = NULL, change_at = 1L, n_rep = 200L, 
     if (is.null(post)) {
       s <- stream(pre, max_t)
     } else {
-      s1 <- stream(pre, change_at - 1L); s2 <- stream(post, max_t - change_at + 1L)
-      s <- list(x = c(s1$x, s2$x), n = c(s1$n, s2$n))
+      s2 <- stream(post, max_t - change_at + 1L)
+      s <- if (change_at > 1L) { s1 <- stream(pre, change_at - 1L); list(x = c(s1$x, s2$x), n = c(s1$n, s2$n)) } else s2
     }
     x[, r] <- s$x; nn[, r] <- s$n
   }

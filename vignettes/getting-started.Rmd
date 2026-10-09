@@ -87,6 +87,9 @@ autoplot(p_chart)
 
 With the daily COVID-19 deaths of Recife from the `shewhartr` package, a c chart
 with the first four weeks as Phase I asks when the count left its early level.
+Epidemic counts are overdispersed, so the sub-Poisson class is an illustration
+here, not a guarantee; a bounded class with a declared maximum would be the
+honest choice for such data.
 
 ```{r recife, eval = requireNamespace("shewhartr", quietly = TRUE)}
 deaths <- shewhartr::cvd_recife$new_deaths

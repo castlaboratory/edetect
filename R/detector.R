@@ -69,7 +69,7 @@ edetect_update <- function(state, x, n = NULL) {
   log_w <- log(d$weights); log_arl <- log(d$arl)
   k <- length(d$lambda)
   nobs <- length(obs$x)
-  out <- vector("list", nobs)
+  tr_log_e <- tr_ev <- tr_ev_cu <- numeric(nobs); tr_ce <- integer(nobs); tr_alarm <- logical(nobs)
   log_sr <- state$log_sr; log_cu <- state$log_cu; restart <- state$restart
   t <- state$t
   alarm_time <- NA_integer_; alarm_evidence <- NA_real_; change_estimate <- NA_integer_
@@ -84,9 +84,8 @@ edetect_update <- function(state, x, n = NULL) {
     ev <- if (d$type == "sr") ev_sr else ev_cu
     ce <- restart[which.max(log_w + log_cu)]
     alarm <- is.finite(ev) && ev >= d$arl || is.infinite(ev)
-    out[[i]] <- list(t = t, x = obs$x[i], n = obs$n[i], log_evalue = log_mix(log_w, le),
-                     evidence = ev, evidence_cusum = ev_cu, threshold = d$arl,
-                     change_estimate = ce, alarm = alarm)
+    tr_log_e[i] <- log_mix(log_w, le); tr_ev[i] <- ev; tr_ev_cu[i] <- ev_cu
+    tr_ce[i] <- ce; tr_alarm[i] <- alarm
     if (alarm) {
       alarm_time <- t; alarm_evidence <- ev; change_estimate <- ce
       if (i < nobs) {
@@ -95,7 +94,11 @@ edetect_update <- function(state, x, n = NULL) {
       break
     }
   }
-  rows <- do.call(rbind, lapply(out[!vapply(out, is.null, logical(1))], tibble::as_tibble))
+  used <- seq_len(if (is.na(alarm_time)) nobs else t - state$t)
+  rows <- tibble::tibble(t = state$t + used, x = obs$x[used], n = obs$n[used],
+                         log_evalue = tr_log_e[used], evidence = tr_ev[used],
+                         evidence_cusum = tr_ev_cu[used], threshold = d$arl,
+                         change_estimate = tr_ce[used], alarm = tr_alarm[used])
   state$trajectory <- rbind(state$trajectory, rows)
   state$log_sr <- log_sr; state$log_cu <- log_cu; state$restart <- restart; state$t <- t
   state$alarm_time <- alarm_time; state$alarm_evidence <- alarm_evidence
@@ -112,6 +115,12 @@ edetect_update <- function(state, x, n = NULL) {
 #' @param state An `edetect_chart` that raised an alarm.
 #' @return A new `edetect_chart`.
 #' @export
+#' @examples
+#' design <- edetect_design(arl = 20, class = "subgaussian", center = 0, sigma = 1)
+#' state <- suppressWarnings(edetect_update(edetect_init(design), c(rnorm(5), rnorm(30, 3))))
+#' edetect_alarm(state)$alarm
+#' state <- edetect_restart(state)
+#' edetect_alarm(state)$alarm
 edetect_restart <- function(state) {
   assert_chart(state)
   new <- edetect_init(state$design)
@@ -172,7 +181,7 @@ edetect_report <- function(state) {
                         format(d$bounds[1]), format(d$bounds[2]), direction_word(d$direction), format(signif(d$center, 4))),
       subgaussian = sprintf("Pre-change observations have mean %s %s and sub-Gaussian tails with scale %s.",
                             direction_word(d$direction), format(signif(d$center, 4)), format(signif(d$sigma, 4))),
-      bernoulli = sprintf("Pre-change trials have success probability %s %s; dependence within a subgroup is allowed.",
+      bernoulli = sprintf("Pre-change trials have conditional success probability %s %s; other dependence within a subgroup is allowed.",
                           direction_word(d$direction), format(signif(d$center, 4))),
       poisson = sprintf("Pre-change counts are sub-Poisson with rate %s %s per unit exposure (no overdispersion).",
                         direction_word(d$direction), format(signif(d$center, 4)))),

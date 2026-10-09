@@ -13,8 +13,9 @@
 #'   declared scale `sigma`. Gaussian data with standard deviation `sigma` is the
 #'   boundary case; heavier tails violate the class.
 #' * `"bernoulli"`: counts of successes in subgroups of size `n`, each trial with
-#'   success probability at most/at least/equal to `center`; any dependence within
-#'   a subgroup is allowed. This is the p chart.
+#'   conditional success probability (given the earlier trials of the subgroup) at
+#'   most/at least/equal to `center`; beyond that, dependence within a subgroup is
+#'   allowed. This is the p chart.
 #' * `"poisson"`: counts with exposure `n` whose moment generating function is at
 #'   most that of a Poisson with rate `center` per unit exposure (Poisson and
 #'   underdispersed counts; overdispersed counts violate the class). These are the
@@ -179,7 +180,7 @@ build_mixture <- function(class, center, bounds, sigma, direction, evalue, delta
       room <- if (sign > 0) 1 - m0 else m0            # how far the mean can move
       cap <- if (sign > 0) 1 / m0 else 1 / (1 - m0)   # largest admissible |lambda| for betting
       d01 <- if (is.null(delta)) fractions * room else pmin(delta / (b - a), 0.999 * room)
-      lam <- if (evalue == "betting") sign * pmin(d01 / room, 1) * cap
+      lam <- if (evalue == "betting") sign * pmin(d01 / room, 0.99) * cap
              else lr_lambda_bernoulli(m0, sign * d01)
       list(delta = sign * d01 * (b - a), lambda = lam)
     } else if (class == "bernoulli") {

@@ -69,7 +69,7 @@ detection delays of a design.
 For a design with target `arl`, every pre-change distribution in the declared
 class gives an expected time to a false alarm of at least `arl`. The classes are
 *bounded* (known bounds, nothing else), *sub-Gaussian* (declared scale),
-*Bernoulli* (p chart; any dependence within a subgroup) and *Poisson* (c and u
+*Bernoulli* (p chart; dependence within a subgroup allowed given the conditional probabilities) and *Poisson* (c and u
 charts; no overdispersion). The price is detection delay, which the mixture of
 shifts and `edetect_arl()` let you measure before monitoring.
 

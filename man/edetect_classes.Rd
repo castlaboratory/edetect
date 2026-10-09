@@ -23,8 +23,9 @@ assumed. E-values: \code{"betting"} (tight, default) or \code{"hoeffding"} (sub-
 declared scale \code{sigma}. Gaussian data with standard deviation \code{sigma} is the
 boundary case; heavier tails violate the class.
 \item \code{"bernoulli"}: counts of successes in subgroups of size \code{n}, each trial with
-success probability at most/at least/equal to \code{center}; any dependence within
-a subgroup is allowed. This is the p chart.
+conditional success probability (given the earlier trials of the subgroup) at
+most/at least/equal to \code{center}; beyond that, dependence within a subgroup is
+allowed. This is the p chart.
 \item \code{"poisson"}: counts with exposure \code{n} whose moment generating function is at
 most that of a Poisson with rate \code{center} per unit exposure (Poisson and
 underdispersed counts; overdispersed counts violate the class). These are the

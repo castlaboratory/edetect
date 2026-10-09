@@ -1,4 +1,5 @@
 test_that("e-values have expectation at most one under the pre-change class", {
+  skip_on_cran()
   set.seed(11)
   m <- 2e5
   check <- function(design, x, n = 1) {
