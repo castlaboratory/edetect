@@ -6,7 +6,7 @@
       <stop offset="0" stop-color="#2B2F3A"></stop>
       <stop offset="1" stop-color="#15181F"></stop>
     </linearGradient>
-  </defs><polygon points="120,6 234,72 234,206 120,272 6,206 6,72" fill="url(#bg)" stroke="#B4432B" stroke-width="7" stroke-linejoin="round"></polygon><g clip-path="url(#hex)">
+  </defs><polygon points="120,6 234,72 234,206 120,272 6,206 6,72" fill="url(#bg)" stroke="#B4432B" stroke-width="7" stroke-linejoin="round"></polygon><g clip-path="url(#hex)" transform="translate(14,4) scale(0.88)">
     <!-- threshold line (ARL) -->
     <line x1="18" y1="92" x2="222" y2="92" stroke="#E6A23C" stroke-width="3" stroke-dasharray="9 7"></line>
     <!-- pre-change: evidence hovering low -->
@@ -17,4 +17,4 @@
     <line x1="128" y1="196" x2="128" y2="66" stroke="#B4432B" stroke-width="2.5" stroke-dasharray="4 4"></line>
     <!-- alarm -->
     <circle cx="206" cy="84" r="9" fill="#B4432B" stroke="#F2F4F7" stroke-width="3"></circle>
-  </g><text x="120" y="238" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="38" font-weight="700" fill="#F2F4F7" letter-spacing="1">edetect</text></svg>
+  </g><text x="120" y="226" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="30" font-weight="700" fill="#F2F4F7" textLength="118" lengthAdjust="spacingAndGlyphs">edetect</text></svg>
