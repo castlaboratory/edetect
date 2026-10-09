@@ -37,8 +37,10 @@ edetect_classes <- function() c("bounded", "subgaussian", "bernoulli", "poisson"
 #'
 #' The guarantee is distribution-free within the class: for every pre-change
 #' distribution in it, the expected time to a false alarm is at least `arl`
-#' (Shin, Ramdas and Rinaldo, 2024). The price is paid in detection delay,
-#' which depends on the alternatives the mixture covers.
+#' (Shin, Ramdas and Rinaldo, 2024, Theorem 2.4), and the probability of a false
+#' alarm by any time `t`, including data-dependent monitoring horizons, is at
+#' most `t / arl` (Ramdas, 2026). The price is paid in detection delay, which
+#' depends on the alternatives the mixture covers.
 #'
 #' @param arl Target average run length to a false alarm. The alarm threshold
 #'   is `arl` on the e-detector scale (equivalently `alpha = 1 / arl`).
@@ -53,8 +55,10 @@ edetect_classes <- function() c("bounded", "subgaussian", "bernoulli", "poisson"
 #' @param direction Change to detect: an increase (`"up"`), a decrease
 #'   (`"down"`) or either (`"both"`, a half-and-half mixture of the two).
 #' @param type `"sr"` (Shiryaev--Roberts type, a sum of e-processes started at
-#'   every time) or `"cusum"` (CUSUM type, a maximum). Both are e-detectors;
-#'   `"sr"` is the default.
+#'   every time) or `"cusum"` (CUSUM type, a maximum). Both are e-detectors and
+#'   both use the threshold `arl`, which for the CUSUM type is valid but
+#'   conservative (Shin, Ramdas and Rinaldo, 2024, Section 2.5); `"sr"` is the
+#'   default.
 #' @param evalue E-value family for the `"bounded"` class: `"betting"`
 #'   (`1 + lambda (x - center)`, tight for bounded data) or `"hoeffding"`
 #'   (sub-Bernoulli exponential). Ignored by the other classes, which use their
@@ -75,6 +79,10 @@ edetect_classes <- function() c("bounded", "subgaussian", "bernoulli", "poisson"
 #' @references Shin, J., Ramdas, A. and Rinaldo, A. (2024). E-detectors: a
 #'   nonparametric framework for sequential change detection. *The New England
 #'   Journal of Statistics in Data Science*, 2(2), 229--260.
+#'   \doi{10.51387/23-NEJSDS51}
+#'
+#'   Ramdas, A. (2026). Universality of e-detectors for ARL control.
+#'   arXiv:2608.12660.
 #' @export
 #' @examples
 #' edetect_design(arl = 370, class = "bounded", center = 0.5, bounds = c(0, 1))

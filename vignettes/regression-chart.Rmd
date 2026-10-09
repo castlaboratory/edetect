@@ -1,0 +1,88 @@
+---
+title: "Regression chart for non-stationary processes"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Regression chart for non-stationary processes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+has_data <- requireNamespace("shewhartr", quietly = TRUE)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4.5,
+                      eval = has_data)
+```
+
+```{r setup}
+library(edetect)
+```
+
+When the in-control level depends on covariates or on time, a chart on the raw
+observations alarms for the wrong reason. The regression chart fits a model on
+Phase I data and monitors the Phase II residuals, `y - prediction`, as a
+sub-Gaussian stream centred at zero whose scale is the residual standard
+deviation of the Phase I fit. The fit, the scale and the Phase I size are
+recorded in the chart.
+
+The model is part of the assumptions: a residual chart tests the model as much
+as the process.
+
+## A curing oven with drift and a periodic component
+
+Two hundred readings of a curing oven show a slow linear drift with a periodic
+component superimposed. The first hundred minutes are Phase I.
+
+```{r data}
+oven <- shewhartr::temperature_drift
+head(oven, 3)
+```
+
+A linear model on time captures the drift but not the periodic component, and
+the residuals of Phase II inherit it. The chart alarms within a few minutes of
+Phase II, with an estimated change point at its second minute: the alarm is
+against the model, not against the oven.
+
+```{r linear}
+linear <- edetect_regression(temp_c ~ minute, phase1 = oven[1:100, ], phase2 = oven[101:200, ],
+                             arl = 370, direction = "both")
+edetect_alarm(linear)
+```
+
+A model with the periodic component (period 50 minutes, read off the Phase I
+residuals) has a residual scale of
+`r round(stats::sigma(stats::lm(temp_c ~ minute + sin(2 * pi * minute / 50) + cos(2 * pi * minute / 50), oven[1:100, ])), 3)`
+degrees and describes Phase I well.
+
+```{r periodic}
+periodic <- edetect_regression(
+  temp_c ~ minute + sin(2 * pi * minute / 50) + cos(2 * pi * minute / 50),
+  phase1 = oven[1:100, ], phase2 = oven[101:200, ], arl = 370, direction = "both")
+edetect_alarm(periodic)
+autoplot(periodic)
+```
+
+This chart alarms at minute 179 with the change estimated at minute 165. The
+residuals of minutes 161 to 180 average about 0.25 degrees above the model,
+two thirds of the residual scale, which is what the detector reacted to. With
+a target ARL of 370 and a hundred Phase II observations, a false alarm from a
+stable process has a probability of roughly a quarter, so the data alone
+cannot tell a transient excursion of the oven from a false alarm; what the
+guarantee promises is that such alarms are rare in the long run.
+
+```{r periodic-report}
+edetect_report(periodic)
+```
+
+## Practical notes
+
+* The residual scale is estimated from Phase I and treated as known. If Phase
+  II residuals are more dispersed than Phase I, the sub-Gaussian assumption
+  fails and alarms become more frequent than the guarantee says. A longer Phase
+  I, or a declared `sigma` with a safety margin, protects against this.
+* A sub-Gaussian class with a declared scale is a stronger assumption than a
+  bounded class. When residuals have a known range, `edetect_design()` with
+  `class = "bounded"` on the residuals gives a guarantee that does not depend
+  on the tails.
+* The change-point estimate is the start of the e-process that carries most of
+  the evidence at the alarm; for a slow drift it points to where the drift
+  became visible, not to where it began.

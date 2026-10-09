@@ -2,11 +2,13 @@
 #
 # Per bet lambda_k the Shiryaev-Roberts recursion is M_t = (1 + M_{t-1}) e_t and
 # the CUSUM recursion is M_t = max(1, M_{t-1}) e_t, both in log space. The
-# detector statistic is the mixture over k with the design weights: for "sr"
-# this equals the SR detector of the mixture e-process; for "cusum" the mixture
-# is taken outside the maximum, which keeps the recursion O(K) and is still an
-# e-detector (a convex combination of e-detectors). The alarm is raised when the
-# statistic reaches the target ARL.
+# detector statistic is the mixture over k with the design weights, exactly the
+# finite mixtures of SR and CUSUM e-detectors of Shin, Ramdas and Rinaldo (2024,
+# eq. 26-28): a convex combination of e-detectors is an e-detector (their
+# Proposition 2.3), and the recursions (13)-(14) keep the cost O(K) per
+# observation. The alarm is raised when the statistic reaches the target ARL
+# (their Theorem 2.4 with threshold 1/alpha = arl, which is also valid, if
+# conservative, for the CUSUM type).
 
 #' Initialise an e-detector
 #'
@@ -188,7 +190,9 @@ edetect_report <- function(state) {
     if (d$center_source == "phase1") sprintf("The centre%s was estimated from %d Phase I observations and is treated as known.",
                                              if (d$class == "subgaussian") " and the scale" else "", d$n_phase1)
     else "The centre was declared by the user.",
-    "Observations arrive in time order and none was dropped or imputed."
+    "Observations arrive in time order and none was dropped or imputed.",
+    sprintf("Under these assumptions the expected time to a false alarm is at least %s, and the probability of a false alarm by any time t is at most t/%s.",
+            format(d$arl), format(d$arl))
   )
   structure(list(
     class = d$class, center = d$center, center_source = d$center_source, n_phase1 = d$n_phase1,

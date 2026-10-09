@@ -21,5 +21,5 @@ First submission.
   e-value expectations and of the simulated average run length are skipped on CRAN
   (`skip_on_cran()`); lighter deterministic versions run everywhere.
 * Examples and the vignette run in well under a minute; no example is wrapped in
-  `\dontrun{}`. The vignette uses a dataset from the suggested package
-  `shewhartr` only when it is installed.
+  `\dontrun{}`. Three of the four vignettes use datasets from the suggested package
+  `shewhartr` and evaluate their chunks only when it is installed.

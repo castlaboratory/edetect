@@ -38,8 +38,10 @@ deviation is used and recorded as an assumption.}
 (\code{"down"}) or either (\code{"both"}, a half-and-half mixture of the two).}
 
 \item{type}{\code{"sr"} (Shiryaev--Roberts type, a sum of e-processes started at
-every time) or \code{"cusum"} (CUSUM type, a maximum). Both are e-detectors;
-\code{"sr"} is the default.}
+every time) or \code{"cusum"} (CUSUM type, a maximum). Both are e-detectors and
+both use the threshold \code{arl}, which for the CUSUM type is valid but
+conservative (Shin, Ramdas and Rinaldo, 2024, Section 2.5); \code{"sr"} is the
+default.}
 
 \item{evalue}{E-value family for the \code{"bounded"} class: \code{"betting"}
 (\code{1 + lambda (x - center)}, tight for bounded data) or \code{"hoeffding"}
@@ -73,8 +75,10 @@ average run length (ARL) to a false alarm.
 \details{
 The guarantee is distribution-free within the class: for every pre-change
 distribution in it, the expected time to a false alarm is at least \code{arl}
-(Shin, Ramdas and Rinaldo, 2024). The price is paid in detection delay,
-which depends on the alternatives the mixture covers.
+(Shin, Ramdas and Rinaldo, 2024, Theorem 2.4), and the probability of a false
+alarm by any time \code{t}, including data-dependent monitoring horizons, is at
+most \code{t / arl} (Ramdas, 2026). The price is paid in detection delay, which
+depends on the alternatives the mixture covers.
 }
 \examples{
 edetect_design(arl = 370, class = "bounded", center = 0.5, bounds = c(0, 1))
@@ -85,4 +89,8 @@ edetect_design(arl = 370, class = "subgaussian", phase1 = rnorm(100), direction 
 Shin, J., Ramdas, A. and Rinaldo, A. (2024). E-detectors: a
 nonparametric framework for sequential change detection. \emph{The New England
 Journal of Statistics in Data Science}, 2(2), 229--260.
+\doi{10.51387/23-NEJSDS51}
+
+Ramdas, A. (2026). Universality of e-detectors for ARL control.
+arXiv:2608.12660.
 }

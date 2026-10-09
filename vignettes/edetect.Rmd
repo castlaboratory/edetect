@@ -1,0 +1,125 @@
+---
+title: "Get started with edetect"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Get started with edetect}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+has_data <- requireNamespace("shewhartr", quietly = TRUE)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4.5,
+                      eval = has_data)
+```
+
+```{r setup}
+library(edetect)
+```
+
+## What an e-detector is
+
+A control chart watches a stream of observations and raises an alarm when the
+process seems to have changed. The classical charts (Shewhart, CUSUM, EWMA) are
+calibrated under a model for the in-control process, usually Gaussian, and their
+false-alarm rate is only as good as that model.
+
+An **e-detector** (Shin, Ramdas and Rinaldo, 2024) replaces the model by a
+*class*: everything the user is willing to assume about the process before the
+change, for example "observations lie in [495, 505] and their mean is 500", or
+"observations have mean 250 and sub-Gaussian tails with scale 0.67". For every
+distribution in the class, the expected time to a false alarm is at least the
+target **average run length** (ARL). The detector accumulates *e-values*, bets
+against the pre-change class, started at every time point; the Shiryaev--Roberts
+type sums them, the CUSUM type keeps the largest, and the alarm is raised when
+the accumulated evidence reaches the ARL.
+
+The price of the guarantee is paid in detection delay: the detector cannot know
+the size of the change, so it bets on a mixture of shifts.
+
+The examples use the industrial datasets of the
+[shewhartr](https://github.com/castlaboratory/shewhartr) package, so that the
+two packages can be compared on the same data.
+
+## A process with a declared centre and scale
+
+Tablet weights are recorded in subgroups of five, with a target of 250 mg and a
+process standard deviation of 1.5 mg. A shift of 1.5 mg is embedded from
+subgroup 18. We monitor the subgroup means, whose scale is $1.5/\sqrt{5}$, with
+the first twelve subgroups serving as Phase I.
+
+```{r tablets}
+tablets <- aggregate(weight ~ subgroup, shewhartr::tablet_weight, mean)
+head(tablets, 3)
+
+design <- edetect_design(arl = 370, class = "subgaussian", center = 250,
+                         sigma = 1.5 / sqrt(5), direction = "both")
+design
+chart <- edetect_update(edetect_init(design), tablets$weight[13:25])
+chart
+```
+
+The detector stopped at its seventh Phase II subgroup (subgroup 19) and the
+observations after it were not consumed, which a warning reports. Its estimate
+of the change point is the sixth Phase II subgroup, that is subgroup 18, where
+the shift was embedded.
+
+```{r tablets-plot}
+edetect_alarm(chart)
+autoplot(chart)
+```
+
+`edetect_report()` lists what was assumed, how the detector was built and what
+happened; `tidy()` returns the trajectory, one row per observation.
+
+```{r report}
+edetect_report(chart)
+tidy(chart)
+```
+
+## Phase I estimation and a slow drift
+
+Fill volumes of a bottling line have a target of 500 ml. A linear drift begins
+around observation 65. Here the centre and the scale are estimated from the
+first fifty observations and recorded as an assumption of the chart.
+
+```{r bottles}
+ml <- shewhartr::bottle_fill$ml
+design <- edetect_design(arl = 370, class = "subgaussian", phase1 = ml[1:50],
+                         direction = "up")
+design
+chart <- edetect_update(edetect_init(design), ml[51:100])
+edetect_alarm(chart)
+autoplot(chart)
+```
+
+A slow drift is a hard case for any detector: the mean moves by a fraction of
+the scale per observation, so the evidence builds slowly. The alarm came at the
+last observation and the change point is estimated at observation 82, well
+after the drift began; a Phase I of fifty observations also leaves the centre
+and the scale with sampling error, which the report records.
+
+The bounded class makes a weaker assumption: fill volumes are known to lie in
+[495, 505] and nothing is assumed about their tails. The betting e-values on
+that class are slower than the sub-Gaussian ones but hold for any distribution
+on the interval.
+
+```{r bottles-bounded}
+design_b <- edetect_design(arl = 370, class = "bounded", bounds = c(495, 505),
+                           phase1 = ml[1:50], direction = "up")
+edetect_alarm(edetect_update(edetect_init(design_b), ml[51:100]))
+```
+
+## Where to go next
+
+* [Attribute charts](attribute-charts.html): p, c and u charts on counts.
+* [Regression chart](regression-chart.html): monitoring residuals of a Phase I
+  model when the process is not stationary.
+* [Run lengths and delays](run-lengths.html): checking the guarantee and
+  measuring the delay of a design before monitoring.
+
+## References
+
+Shin, J., Ramdas, A. and Rinaldo, A. (2024). E-detectors: a nonparametric
+framework for sequential change detection. *The New England Journal of
+Statistics in Data Science*, 2(2), 229--260.

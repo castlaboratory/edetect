@@ -1,0 +1,103 @@
+---
+title: "Attribute charts: p, c and u"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Attribute charts: p, c and u}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+has_data <- requireNamespace("shewhartr", quietly = TRUE)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>", fig.width = 7, fig.height = 4.5,
+                      eval = has_data)
+```
+
+```{r setup}
+library(edetect)
+```
+
+Attribute charts monitor counts. The classical charts assume binomial or
+Poisson counts and set three-sigma limits from a normal approximation. The
+e-detector versions keep the counting model only as an upper bound on the
+moment generating function, which is what the guarantee needs:
+
+* the **p chart** assumes that each trial in a subgroup has a conditional
+  success probability (given the earlier trials) at most, at least or equal to
+  the centre; beyond that, dependence within a subgroup is allowed;
+* the **c and u charts** assume that the counts are *sub-Poisson*: their moment
+  generating function is at most that of a Poisson variable with the declared
+  rate per unit exposure. Poisson and underdispersed counts qualify;
+  overdispersed counts do not, and for those a bounded class with a declared
+  maximum count is the honest choice.
+
+## p chart: daily error rates of insurance claims
+
+Each day a variable number of claims is processed and the claims with errors
+are counted. The error rate is 5% for the first 22 days and 9% from day 23. The
+first fifteen days serve as Phase I.
+
+```{r claims}
+claims <- shewhartr::claims_p
+head(claims, 3)
+
+p_chart <- edetect_p(x = claims$defects[16:30], n = claims$n[16:30],
+                     phase1 = data.frame(x = claims$defects[1:15], n = claims$n[1:15]),
+                     arl = 370, direction = "up")
+edetect_alarm(p_chart)
+autoplot(p_chart)
+```
+
+The alarm came at the eleventh Phase II day (day 26), three days after the
+rate rose, and the change is estimated at the eighth Phase II day, that is
+day 23. The Phase I estimate of the rate (`r round(p_chart$design$center, 4)`)
+is recorded as an assumption of the chart.
+
+```{r claims-report}
+edetect_report(p_chart)
+```
+
+## c chart: solder defects on circuit boards
+
+Fifty boards are inspected and the defective solder joints on each are
+counted; the process is stable with a mean of about 6. The first twenty boards
+serve as Phase I. A stable process should produce no alarm, and the evidence
+should stay far from the threshold.
+
+```{r pcb}
+defects <- shewhartr::pcb_solder$defects
+c_chart <- edetect_c(defects[21:50], phase1 = defects[1:20], arl = 370, direction = "both")
+edetect_alarm(c_chart)
+max(tidy(c_chart)$evidence)
+autoplot(c_chart)
+```
+
+## u chart: defects per board in samples of unequal size
+
+When boards are inspected in samples of two to four, the count per sample is
+monitored per board inspected: the exposure `n` is the number of boards. The
+rate per board is declared from the specification (6 defects per board).
+
+```{r u}
+set.seed(1)
+sizes <- sample(2:4, 20, replace = TRUE)
+sizes <- sizes[cumsum(sizes) <= 50]
+sample_id <- rep(seq_along(sizes), sizes)
+samples <- data.frame(n = sizes,
+                      x = as.integer(tapply(defects[seq_along(sample_id)], sample_id, sum)))
+head(samples, 4)
+
+u_chart <- edetect_u(samples$x, n = samples$n, center = 6, arl = 370, direction = "both")
+edetect_alarm(u_chart)
+autoplot(u_chart)
+```
+
+## What the alarm means, and what it does not
+
+An alarm says that the evidence against the pre-change class reached the
+target ARL. It does not say that the process changed: with a target ARL of 370
+a stable process produces, on average, one alarm every 370 observations or
+more. A missing alarm does not say that the process is stable either; it says
+that the evidence has not accumulated yet, which for small changes can take
+long. `edetect_arl()` measures both sides for a design before monitoring (see
+the [run-lengths](run-lengths.html) vignette).

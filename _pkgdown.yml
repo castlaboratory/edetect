@@ -37,5 +37,12 @@ reference:
 - title: Re-exports
   contents: [reexports]
 articles:
-- title: Vignettes
-  contents: [getting-started]
+- title: Get started
+  navbar: ~
+  contents: [edetect]
+- title: Charts
+  navbar: Charts
+  contents: [attribute-charts, regression-chart]
+- title: Design
+  navbar: Design
+  contents: [run-lengths]

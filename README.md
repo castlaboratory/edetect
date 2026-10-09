@@ -62,12 +62,15 @@ pre-change class, the direction, the detector type (SR or CUSUM) and the mixture
 of post-change shifts; `edetect_init()` and `edetect_update()` run it one
 observation at a time; `edetect_report()`, `tidy()`, `glance()` and
 `autoplot()` read the result; `edetect_arl()` simulates run lengths and
-detection delays of a design.
+detection delays of a design. The vignettes on the [package site](https://castlaboratory.github.io/edetect/)
+work through the industrial datasets of `shewhartr`: tablet weights, bottle filling,
+insurance claims, solder defects and an oven with drift.
 
 ## Guarantee
 
 For a design with target `arl`, every pre-change distribution in the declared
-class gives an expected time to a false alarm of at least `arl`. The classes are
+class gives an expected time to a false alarm of at least `arl`, and a
+probability of a false alarm by any time `t` of at most `t / arl` (Ramdas, 2026). The classes are
 *bounded* (known bounds, nothing else), *sub-Gaussian* (declared scale),
 *Bernoulli* (p chart; dependence within a subgroup allowed given the conditional probabilities) and *Poisson* (c and u
 charts; no overdispersion). The price is detection delay, which the mixture of
@@ -84,6 +87,8 @@ nonparametric sequential change-point models see
 e-detectors was found on CRAN or PyPI (checked 2026-09-25 and 2026-10-10).
 
 ## References
+
+Ramdas, A. (2026). Universality of e-detectors for ARL control. arXiv:2608.12660.
 
 Shin, J., Ramdas, A. and Rinaldo, A. (2024). E-detectors: a nonparametric
 framework for sequential change detection. *The New England Journal of
