@@ -1,0 +1,29 @@
+Package: edetect
+Title: Anytime-Valid Control Charts with E-Detectors
+Version: 0.0.0.9000
+Authors@R: c(
+    person("André", "Leite", , "leite@castlab.org", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-4718-9766")),
+    person("Raydonal", "Ospina", , "raydonal@castlab.org", role = "aut",
+           comment = c(ORCID = "0000-0002-9884-9090")),
+    person("Cristiano", "Ferraz", , "cferraz@castlab.org", role = "aut",
+           comment = c(ORCID = "0000-0002-6838-6734"))
+  )
+Description: Sequential change detection for process monitoring with
+    e-detectors: nonparametric, anytime-valid analogues of the CUSUM and
+    Shiryaev-Roberts charts with a guaranteed average run length under
+    bounded or sub-psi pre-change distributions, Phase I/Phase II
+    workflow, attribute (p, c, u) and regression charts, and auditable
+    alarm reports.
+License: GPL (>= 3)
+URL: https://github.com/castlaboratory/edetect
+BugReports: https://github.com/castlaboratory/edetect/issues
+Encoding: UTF-8
+Language: en-GB
+Depends:
+    R (>= 4.1)
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 8.0.0
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
