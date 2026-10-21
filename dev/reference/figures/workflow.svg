@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="840" height="430" viewBox="0 0 840 430" font-family="Helvetica, Arial, sans-serif">
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4A5568"/></marker></defs>
+<rect width="840" height="430" fill="#FFFFFF"/>
+<text x="420" y="26" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#1A202C">edetect workflow: design once, update per observation, alarm with an audit trail</text>
+<rect x="20" y="60" width="150" height="64" rx="8" fill="#EDF2F7" stroke="#4A5568" stroke-width="1.6"/>
+<text x="95.0" y="77.9" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1A202C">Phase I data</text>
+<text x="95.0" y="99.9" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#2D3748">in-control sample</text>
+<text x="95.0" y="115.9" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#2D3748">(optional)</text>
+<rect x="230" y="60" width="180" height="64" rx="8" fill="#E6F1F6" stroke="#1B5E7A" stroke-width="1.6"/>
+<text x="320.0" y="78.5" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1A202C">edetect_design()</text>
+<text x="320.0" y="99.5" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">class, direction, ARL,</text>
+<text x="320.0" y="114.5" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">shifts and bets fixed</text>
+<rect x="470" y="60" width="160" height="64" rx="8" fill="#E6F1F6" stroke="#1B5E7A" stroke-width="1.6"/>
+<text x="550.0" y="78.5" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1A202C">edetect_init()</text>
+<text x="550.0" y="99.5" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">empty chart,</text>
+<text x="550.0" y="114.5" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">evidence = 0</text>
+<rect x="20" y="200" width="150" height="64" rx="8" fill="#EDF2F7" stroke="#4A5568" stroke-width="1.6"/>
+<text x="95.0" y="217.9" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1A202C">observation x_t</text>
+<text x="95.0" y="239.9" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#2D3748">Phase II stream,</text>
+<text x="95.0" y="255.9" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#2D3748">one at a time</text>
+<rect x="230" y="200" width="180" height="64" rx="8" fill="#EFEAF7" stroke="#6B4C9A" stroke-width="1.6"/>
+<text x="320.0" y="218.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1A202C">edetect_update()</text>
+<text x="320.0" y="239.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">e-values, mixture,</text>
+<text x="320.0" y="254.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">SR / CUSUM recursion</text>
+<rect x="470" y="200" width="160" height="64" rx="8" fill="#EFEAF7" stroke="#6B4C9A" stroke-width="1.6" stroke-dasharray="6 4"/>
+<text x="550.0" y="218.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1A202C">evidence &gt;= ARL ?</text>
+<text x="550.0" y="239.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">threshold 1/alpha</text>
+<text x="550.0" y="254.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">of the e-detector</text>
+<rect x="670" y="200" width="150" height="64" rx="8" fill="#FDEEEA" stroke="#B4432B" stroke-width="1.6"/>
+<text x="745.0" y="218.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1A202C">Alarm</text>
+<text x="745.0" y="239.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">time, evidence,</text>
+<text x="745.0" y="254.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">change estimate</text>
+<rect x="470" y="330" width="160" height="64" rx="8" fill="#FFF8E6" stroke="#B7791F" stroke-width="1.6"/>
+<text x="550.0" y="348.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1A202C">edetect_report()</text>
+<text x="550.0" y="369.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">audit trail,</text>
+<text x="550.0" y="384.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">tidy / autoplot</text>
+<rect x="670" y="330" width="150" height="64" rx="8" fill="#FFF8E6" stroke="#B7791F" stroke-width="1.6"/>
+<text x="745.0" y="348.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#1A202C">edetect_restart()</text>
+<text x="745.0" y="369.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">same design,</text>
+<text x="745.0" y="384.6" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#2D3748">fresh state</text>
+<polyline points="170,92 230,92" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<polyline points="410,92 470,92" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<polyline points="550,124 550,200" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="560.0" y="153.5" width="36.6" height="17" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+<text x="578.3" y="165.8" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#4A5568">state</text>
+<polyline points="170,232 230,232" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<polyline points="410,232 470,232" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<polyline points="630,232 670,232" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="637.4" y="205.0" width="25.2" height="17" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+<text x="650.0" y="217.3" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#4A5568">yes</text>
+<polyline points="550,264 550,330" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<rect x="560.0" y="288.5" width="53.8" height="17" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+<text x="586.9" y="300.9" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#4A5568">any time</text>
+<polyline points="745,264 745,330" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<polyline points="470,254 430,254" fill="none" stroke="#4A5568" stroke-width="1.8"/>
+<polyline points="430,254 430,290" fill="none" stroke="#4A5568" stroke-width="1.8"/>
+<polyline points="430,290 95,290" fill="none" stroke="#4A5568" stroke-width="1.8"/>
+<rect x="201.3" y="300.0" width="122.4" height="17" rx="3" fill="#FFFFFF" fill-opacity="0.92"/>
+<text x="262.5" y="312.4" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#4A5568">no: next observation</text>
+<polyline points="95,290 95,264" fill="none" stroke="#4A5568" stroke-width="1.8" marker-end="url(#ah)"/>
+<text x="420" y="412" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="11" fill="#718096" font-style="italic">Guarantee: for every pre-change law in the class, the expected time to a false alarm is at least ARL</text>
+</svg>
