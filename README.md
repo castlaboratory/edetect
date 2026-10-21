@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/castlaboratory/edetect/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/castlaboratory/edetect/actions/workflows/R-CMD-check.yaml)
+[![CRAN status](https://www.r-pkg.org/badges/version/edetect)](https://CRAN.R-project.org/package=edetect)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
@@ -25,6 +26,9 @@ and what was observed.
 ## Installation
 
 ```r
+install.packages("edetect")            # CRAN
+
+# development version
 # install.packages("pak")
 pak::pak("castlaboratory/edetect")
 ```
