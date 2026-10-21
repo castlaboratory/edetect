@@ -14,7 +14,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/castlaboratory/edetect/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/castlaboratory/edetect/blob/v0.1.0/inst/CITATION)
 
 Leite, A., Ospina, R., & Ferraz, C. (2026). edetect: Anytime-Valid
 Control Charts with E-Detectors. R package version 0.1.0.
