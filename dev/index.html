@@ -132,6 +132,7 @@
 <h2 id="guarantee">Guarantee<a class="anchor" aria-label="anchor" href="#guarantee"></a>
 </h2>
 <p>For a design with target <code>arl</code>, every pre-change distribution in the declared class gives an expected time to a false alarm of at least <code>arl</code>, and a probability of a false alarm by any time <code>t</code> of at most <code>t / arl</code> (Ramdas, 2026). The classes are <em>bounded</em> (known bounds, nothing else), <em>sub-Gaussian</em> (declared scale), <em>Bernoulli</em> (p chart; dependence within a subgroup allowed given the conditional probabilities) and <em>Poisson</em> (c and u charts; no overdispersion). The price is detection delay, which the mixture of shifts and <code><a href="reference/edetect_arl.html">edetect_arl()</a></code> let you measure before monitoring.</p>
+<p>When the centre is estimated from Phase I data, the chart is centred at a one-sided confidence bound for the in-control mean (<code>phase1_beta = 0.1</code> by default). The guarantee then holds with probability at least <code>1 - phase1_beta</code> over the Phase I sample, and the probability of a false alarm by time <code>t</code> is at most <code>phase1_beta + t / arl</code>. Centring at the Phase I estimate itself (<code>phase1_beta = NULL</code>) gives no guarantee: for the Shiryaev-Roberts type the ARL bound is attained when the centre equals the in-control mean, so an estimate below that mean shortens the in-control run length.</p>
 </div>
 <div class="section level2">
 <h2 id="related-software">Related software<a class="anchor" aria-label="anchor" href="#related-software"></a>
@@ -153,6 +154,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=edetect" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/castlaboratory/edetect/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/castlaboratory/edetect/issues" class="external-link">Report a bug</a></li>
 </ul>

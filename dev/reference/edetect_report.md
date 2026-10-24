@@ -19,7 +19,16 @@ edetect_report(state)
 
 ## Value
 
-A list of class `edetect_report`.
+A list of class `edetect_report`, including `assumptions` and
+`phase1_checks` (character vectors).
+
+## Details
+
+When the centre was estimated from a numeric Phase I sample, the report
+also lists Phase I checks: the lag-one autocorrelation of the sample
+(positive autocorrelation around the centre is outside every class of
+the package), and, for a betting bound, whether its width is set by the
+variance of the data or by the declared bounds.
 
 ## Examples
 

@@ -77,7 +77,16 @@ the software versions.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list of class <code>edetect_report</code>.</p>
+    <p>A list of class <code>edetect_report</code>, including <code>assumptions</code> and
+<code>phase1_checks</code> (character vectors).</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>When the centre was estimated from a numeric Phase I sample, the report also
+lists Phase I checks: the lag-one autocorrelation of the sample (positive
+autocorrelation around the centre is outside every class of the package),
+and, for a betting bound, whether its width is set by the variance of the
+data or by the declared bounds.</p>
     </div>
 
     <div class="section level2">

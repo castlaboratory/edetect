@@ -200,8 +200,12 @@ trajectory, one row per observation.</p>
 </h2>
 <p>Fill volumes of a bottling line have a target of 500 ml. A linear
 drift begins around observation 65. Here the centre and the scale are
-estimated from the first fifty observations and recorded as an
-assumption of the chart.</p>
+estimated from the first fifty observations. When the centre is
+estimated, <code><a href="../reference/edetect_design.html">edetect_design()</a></code> does not centre the chart at
+the Phase I mean: it uses a one-sided confidence bound for the
+in-control mean, at level <code>1 - phase1_beta</code> (0.9 by default),
+so that the guarantee holds with probability at least 0.9 over the Phase
+I sample.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ml</span> <span class="op">&lt;-</span> <span class="fu">shewhartr</span><span class="fu">::</span><span class="va"><a href="https://castlaboratory.github.io/shewhartr/reference/bottle_fill.html" class="external-link">bottle_fill</a></span><span class="op">$</span><span class="va">ml</span></span>
 <span><span class="va">design</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/edetect_design.html">edetect_design</a></span><span class="op">(</span>arl <span class="op">=</span> <span class="fl">370</span>, class <span class="op">=</span> <span class="st">"subgaussian"</span>, phase1 <span class="op">=</span> <span class="va">ml</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span><span class="op">]</span>,</span>
@@ -209,7 +213,8 @@ assumption of the chart.</p>
 <span><span class="va">design</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">e-detector design</span> <span style="color: #00BBBB;">───────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; Pre-change class: <span style="color: #0000BB;">"subgaussian"</span>; centre 499.9 (phase1, n = 50)</span></span>
+<span><span class="co">#&gt; Pre-change class: <span style="color: #0000BB;">"subgaussian"</span>; centre 500.4 (phase1_bound, n = 50)</span></span>
+<span><span class="co">#&gt; Phase I estimate 499.9; bets centred at 500.4 (failure probability 0.1)</span></span>
 <span><span class="co">#&gt; Sub-Gaussian scale: 1.378</span></span>
 <span><span class="co">#&gt; Direction: <span style="color: #0000BB;">"up"</span>; type: <span style="color: #0000BB;">"sr"</span>; target ARL 370 (threshold 370 on the e-detector</span></span>
 <span><span class="co">#&gt; scale)</span></span>
@@ -219,27 +224,41 @@ assumption of the chart.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
 <span><span class="co">#&gt;   alarm alarm_time evidence threshold change_estimate n_observed</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TRUE          50     405.       370              32         50</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE         <span style="color: #BB0000;">NA</span>     26.1       370              32         50</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">chart</span><span class="op">)</span></span></code></pre></div>
 <p><img src="edetect_files/figure-html/bottles-1.png" class="r-plt" alt="" width="672"></p>
-<p>A slow drift is a hard case for any detector: the mean moves by a
-fraction of the scale per observation, so the evidence builds slowly.
-The alarm came at the last observation and the change point is estimated
-at observation 82, well after the drift began; a Phase I of fifty
-observations also leaves the centre and the scale with sampling error,
-which the report records.</p>
+<p>The chart raised no alarm. A slow drift is a hard case for any
+detector, and the bound adds to the difficulty: shifts smaller than the
+distance between the bound and the in-control mean are, for this chart,
+indistinguishable from no change. Centring the chart at the Phase I mean
+(<code>phase1_beta = NULL</code>) gives an alarm at the last
+observation, but that chart has no guarantee: for the Shiryaev-Roberts
+type the ARL bound is attained when the centre equals the in-control
+mean, so a Phase I mean below that mean, which happens about half of the
+time, makes the in-control run length shorter than <code>arl</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plugin</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/edetect_design.html">edetect_design</a></span><span class="op">(</span>arl <span class="op">=</span> <span class="fl">370</span>, class <span class="op">=</span> <span class="st">"subgaussian"</span>, phase1 <span class="op">=</span> <span class="va">ml</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span><span class="op">]</span>,</span>
+<span>                         direction <span class="op">=</span> <span class="st">"up"</span>, phase1_beta <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/edetect_alarm.html">edetect_alarm</a></span><span class="op">(</span><span class="fu"><a href="../reference/edetect_update.html">edetect_update</a></span><span class="op">(</span><span class="fu"><a href="../reference/edetect_init.html">edetect_init</a></span><span class="op">(</span><span class="va">plugin</span><span class="op">)</span>, <span class="va">ml</span><span class="op">[</span><span class="fl">51</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   alarm alarm_time evidence threshold change_estimate n_observed</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TRUE          50     405.       370              32         50</span></span></code></pre></div>
+<p>The scale is also estimated from Phase I and treated as known; the
+report of the chart records both choices.</p>
 <p>The bounded class makes a weaker assumption: fill volumes are known
 to lie in [495, 505] and nothing is assumed about their tails. The
 betting e-values on that class are slower than the sub-Gaussian ones but
-hold for any distribution on the interval.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+hold for any distribution on the interval, and the Phase I bound is a
+betting bound that adapts to the variance of the data.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">design_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/edetect_design.html">edetect_design</a></span><span class="op">(</span>arl <span class="op">=</span> <span class="fl">370</span>, class <span class="op">=</span> <span class="st">"bounded"</span>, bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">495</span>, <span class="fl">505</span><span class="op">)</span>,</span>
 <span>                           phase1 <span class="op">=</span> <span class="va">ml</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">50</span><span class="op">]</span>, direction <span class="op">=</span> <span class="st">"up"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/edetect_alarm.html">edetect_alarm</a></span><span class="op">(</span><span class="fu"><a href="../reference/edetect_update.html">edetect_update</a></span><span class="op">(</span><span class="fu"><a href="../reference/edetect_init.html">edetect_init</a></span><span class="op">(</span><span class="va">design_b</span><span class="op">)</span>, <span class="va">ml</span><span class="op">[</span><span class="fl">51</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
 <span><span class="co">#&gt;   alarm alarm_time evidence threshold change_estimate n_observed</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE         <span style="color: #BB0000;">NA</span>     291.       370               6         50</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE         <span style="color: #BB0000;">NA</span>     69.0       370              32         50</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="where-to-go-next">Where to go next<a class="anchor" aria-label="anchor" href="#where-to-go-next"></a>

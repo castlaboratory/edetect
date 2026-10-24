@@ -65,11 +65,11 @@ edetect_arl(design, pre = function(n) rnorm(n), n_rep = 50, max_t = 2000)$summar
 #> # A tibble: 1 × 6
 #>   arl_estimate    se censored target_arl n_rep max_t
 #>          <dbl> <dbl>    <dbl>      <dbl> <int> <int>
-#> 1         100.  12.3        0         50    50  2000
+#> 1         111.  13.1        0         50    50  2000
 edetect_arl(design, pre = function(n) rnorm(n), post = function(n) rnorm(n, 1),
             change_at = 20, n_rep = 50, max_t = 500)$summary
 #> # A tibble: 1 × 7
 #>   delay_mean    se false_alarm censored change_at n_rep max_t
 #>        <dbl> <dbl>       <dbl>    <dbl>     <int> <int> <int>
-#> 1       5.48 0.362        0.08        0        20    50   500
+#> 1       5.23 0.588        0.14        0        20    50   500
 ```

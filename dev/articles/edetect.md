@@ -127,8 +127,13 @@ tidy(chart)
 
 Fill volumes of a bottling line have a target of 500 ml. A linear drift
 begins around observation 65. Here the centre and the scale are
-estimated from the first fifty observations and recorded as an
-assumption of the chart.
+estimated from the first fifty observations. When the centre is
+estimated,
+[`edetect_design()`](https://castlaboratory.github.io/edetect/dev/reference/edetect_design.md)
+does not centre the chart at the Phase I mean: it uses a one-sided
+confidence bound for the in-control mean, at level `1 - phase1_beta`
+(0.9 by default), so that the guarantee holds with probability at least
+0.9 over the Phase I sample.
 
 ``` r
 
@@ -138,7 +143,8 @@ design <- edetect_design(arl = 370, class = "subgaussian", phase1 = ml[1:50],
 design
 #> 
 #> ── e-detector design ───────────────────────────────────────────────────────────
-#> Pre-change class: "subgaussian"; centre 499.9 (phase1, n = 50)
+#> Pre-change class: "subgaussian"; centre 500.4 (phase1_bound, n = 50)
+#> Phase I estimate 499.9; bets centred at 500.4 (failure probability 0.1)
 #> Sub-Gaussian scale: 1.378
 #> Direction: "up"; type: "sr"; target ARL 370 (threshold 370 on the e-detector
 #> scale)
@@ -148,23 +154,41 @@ edetect_alarm(chart)
 #> # A tibble: 1 × 6
 #>   alarm alarm_time evidence threshold change_estimate n_observed
 #>   <lgl>      <int>    <dbl>     <dbl>           <int>      <int>
-#> 1 TRUE          50     405.       370              32         50
+#> 1 FALSE         NA     26.1       370              32         50
 autoplot(chart)
 ```
 
 ![](edetect_files/figure-html/bottles-1.png)
 
-A slow drift is a hard case for any detector: the mean moves by a
-fraction of the scale per observation, so the evidence builds slowly.
-The alarm came at the last observation and the change point is estimated
-at observation 82, well after the drift began; a Phase I of fifty
-observations also leaves the centre and the scale with sampling error,
-which the report records.
+The chart raised no alarm. A slow drift is a hard case for any detector,
+and the bound adds to the difficulty: shifts smaller than the distance
+between the bound and the in-control mean are, for this chart,
+indistinguishable from no change. Centring the chart at the Phase I mean
+(`phase1_beta = NULL`) gives an alarm at the last observation, but that
+chart has no guarantee: for the Shiryaev-Roberts type the ARL bound is
+attained when the centre equals the in-control mean, so a Phase I mean
+below that mean, which happens about half of the time, makes the
+in-control run length shorter than `arl`.
+
+``` r
+
+plugin <- edetect_design(arl = 370, class = "subgaussian", phase1 = ml[1:50],
+                         direction = "up", phase1_beta = NULL)
+edetect_alarm(edetect_update(edetect_init(plugin), ml[51:100]))
+#> # A tibble: 1 × 6
+#>   alarm alarm_time evidence threshold change_estimate n_observed
+#>   <lgl>      <int>    <dbl>     <dbl>           <int>      <int>
+#> 1 TRUE          50     405.       370              32         50
+```
+
+The scale is also estimated from Phase I and treated as known; the
+report of the chart records both choices.
 
 The bounded class makes a weaker assumption: fill volumes are known to
 lie in \[495, 505\] and nothing is assumed about their tails. The
 betting e-values on that class are slower than the sub-Gaussian ones but
-hold for any distribution on the interval.
+hold for any distribution on the interval, and the Phase I bound is a
+betting bound that adapts to the variance of the data.
 
 ``` r
 
@@ -174,7 +198,7 @@ edetect_alarm(edetect_update(edetect_init(design_b), ml[51:100]))
 #> # A tibble: 1 × 6
 #>   alarm alarm_time evidence threshold change_estimate n_observed
 #>   <lgl>      <int>    <dbl>     <dbl>           <int>      <int>
-#> 1 FALSE         NA     291.       370               6         50
+#> 1 FALSE         NA     69.0       370              32         50
 ```
 
 ## Where to go next

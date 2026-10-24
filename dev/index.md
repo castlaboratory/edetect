@@ -100,6 +100,16 @@ price is detection delay, which the mixture of shifts and
 [`edetect_arl()`](https://castlaboratory.github.io/edetect/dev/reference/edetect_arl.md)
 let you measure before monitoring.
 
+When the centre is estimated from Phase I data, the chart is centred at
+a one-sided confidence bound for the in-control mean
+(`phase1_beta = 0.1` by default). The guarantee then holds with
+probability at least `1 - phase1_beta` over the Phase I sample, and the
+probability of a false alarm by time `t` is at most
+`phase1_beta + t / arl`. Centring at the Phase I estimate itself
+(`phase1_beta = NULL`) gives no guarantee: for the Shiryaev-Roberts type
+the ARL bound is attained when the centre equals the in-control mean, so
+an estimate below that mean shortens the in-control run length.
+
 ## Related software
 
 `edetect` is not a general change-point library. For classical charts

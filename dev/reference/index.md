@@ -12,6 +12,8 @@
   : Update an e-detector with new observations
 - [`edetect_restart()`](https://castlaboratory.github.io/edetect/dev/reference/edetect_restart.md)
   : Restart a detector after an alarm
+- [`edetect_batch_means()`](https://castlaboratory.github.io/edetect/dev/reference/edetect_batch_means.md)
+  : Batch means of a series
 
 ## Charts
 

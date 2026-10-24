@@ -111,7 +111,7 @@ conservative.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
 <span><span class="co">#&gt;   arl_estimate    se censored target_arl n_rep max_t</span></span>
 <span><span class="co">#&gt;          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>         190.  17.1        0        100   100  <span style="text-decoration: underline;">3</span>000</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>         196.  15.7        0        100   100  <span style="text-decoration: underline;">3</span>000</span></span></code></pre></div>
 <p>The guarantee holds for every distribution in the class, not only the
 Gaussian one. A bounded design on [0, 1] with centre 0.5 is checked here
 against three pre-change distributions with that mean: uniform, a
@@ -125,7 +125,7 @@ symmetric Beta and a two-point distribution at the bounds.</p>
 <span>  two_point <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">n</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html" class="external-link">rbinom</a></span><span class="op">(</span><span class="va">n</span>, <span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">generators</span>, <span class="kw">function</span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="fu"><a href="../reference/edetect_arl.html">edetect_arl</a></span><span class="op">(</span><span class="va">design_b</span>, pre <span class="op">=</span> <span class="va">g</span>, n_rep <span class="op">=</span> <span class="fl">60</span>, max_t <span class="op">=</span> <span class="fl">3000</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span><span class="op">$</span><span class="va">arl_estimate</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   uniform      beta two_point </span></span>
-<span><span class="co">#&gt; 107.26667  99.83333 109.90000</span></span></code></pre></div>
+<span><span class="co">#&gt;  114.7833  103.7833  124.8833</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="measuring-the-delay">Measuring the delay<a class="anchor" aria-label="anchor" href="#measuring-the-delay"></a>
@@ -142,7 +142,7 @@ delay.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 7</span></span></span>
 <span><span class="co">#&gt;   delay_mean    se false_alarm censored change_at n_rep max_t</span></span>
 <span><span class="co">#&gt;        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       6.82 0.390         0.2        0        50   100   500</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>       6.93 0.470        0.15        0        50   100   500</span></span></code></pre></div>
 <p>The delay grows as the shift shrinks. A design whose mixture
 concentrates on small shifts detects them sooner and pays for it on
 large ones; the default grid spans both.</p>
@@ -154,9 +154,9 @@ large ones; the default grid spans both.</p>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>shift <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.5</span>, <span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, delay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">delays</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   shift delay</span></span>
-<span><span class="co">#&gt; 1   0.5  18.1</span></span>
+<span><span class="co">#&gt; 1   0.5  17.6</span></span>
 <span><span class="co">#&gt; 2   1.0   7.0</span></span>
-<span><span class="co">#&gt; 3   2.0   2.9</span></span></code></pre></div>
+<span><span class="co">#&gt; 3   2.0   2.5</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="shiryaevroberts-versus-cusum-type">Shiryaev–Roberts versus CUSUM type<a class="anchor" aria-label="anchor" href="#shiryaevroberts-versus-cusum-type"></a>
@@ -175,7 +175,7 @@ type for changes after a long stable period.</p>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">types</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    sr cusum </span></span>
-<span><span class="co">#&gt;   6.4   8.9</span></span></code></pre></div>
+<span><span class="co">#&gt;   6.7  10.6</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="bounded-data-betting-versus-sub-bernoulli-e-values">Bounded data: betting versus sub-Bernoulli e-values<a class="anchor" aria-label="anchor" href="#bounded-data-betting-versus-sub-bernoulli-e-values"></a>
@@ -193,7 +193,7 @@ the Hoeffding bound and is slower unless the data sit at the bounds.</p>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">families</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   betting hoeffding </span></span>
-<span><span class="co">#&gt;       7.6      34.6</span></span></code></pre></div>
+<span><span class="co">#&gt;       6.2      34.4</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

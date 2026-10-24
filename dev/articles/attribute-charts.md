@@ -40,41 +40,61 @@ head(claims, 3)
 p_chart <- edetect_p(x = claims$defects[16:30], n = claims$n[16:30],
                      phase1 = data.frame(x = claims$defects[1:15], n = claims$n[1:15]),
                      arl = 370, direction = "up")
-#> Warning: Alarm at t = 11; 4 later observations were not consumed.
 edetect_alarm(p_chart)
 #> # A tibble: 1 × 6
 #>   alarm alarm_time evidence threshold change_estimate n_observed
 #>   <lgl>      <int>    <dbl>     <dbl>           <int>      <int>
-#> 1 TRUE          11    2092.       370               8         11
+#> 1 FALSE         NA     48.3       370               8         15
 autoplot(p_chart)
 ```
 
 ![](attribute-charts_files/figure-html/claims-1.png)
 
-The alarm came at the eleventh Phase II day (day 26), three days after
-the rate rose, and the change is estimated at the eighth Phase II day,
-that is day 23. The Phase I estimate of the rate (0.047) is recorded as
-an assumption of the chart.
+No alarm was raised in the fifteen Phase II days. The chart is centred
+at the upper confidence bound for the Phase I rate (0.0591, against an
+estimate of 0.047), and the rise of the rate from 5% to 9% after day 22
+leaves only eight days and a shift of about three points beyond that
+bound. Centring the chart at the estimate gives an alarm at day 26,
+three days after the rate rose, but without a guarantee on its
+in-control run length:
+
+``` r
+
+edetect_alarm(edetect_p(x = claims$defects[16:30], n = claims$n[16:30],
+                        phase1 = data.frame(x = claims$defects[1:15], n = claims$n[1:15]),
+                        arl = 370, direction = "up", phase1_beta = NULL))
+#> Warning: Alarm at t = 11; 4 later observations were not consumed.
+#> # A tibble: 1 × 6
+#>   alarm alarm_time evidence threshold change_estimate n_observed
+#>   <lgl>      <int>    <dbl>     <dbl>           <int>      <int>
+#> 1 TRUE          11    2092.       370               8         11
+```
+
+A longer Phase I narrows the bound; `phase1_beta` trades the probability
+that the bound fails against detection delay, and the report states the
+guarantee that applies.
 
 ``` r
 
 edetect_report(p_chart)
 #> 
 #> ── e-detector report ───────────────────────────────────────────────────────────
-#> Class "bernoulli", centre 0.04698 (phase1); direction "up"; type "sr"; target
-#> ARL 370.
-#> Observations: 11. Maximum evidence 2090 against a threshold of 370.
-#> ✖ Alarm at t = 11 (evidence 2090); estimated change at t = 8.
+#> Class "bernoulli", centre 0.05905 (phase1_bound); direction "up"; type "sr";
+#> target ARL 370.
+#> Observations: 15. Maximum evidence 48.3 against a threshold of 370.
+#> ✔ No alarm.
 #> 
 #> ── Assumptions ──
 #> 
-#> • Pre-change trials have conditional success probability at most 0.04698; other
+#> • Pre-change trials have conditional success probability at most 0.05905; other
 #> dependence within a subgroup is allowed.
-#> • The centre was estimated from 15 Phase I observations and is treated as
-#> known.
+#> • The centre is the upper Chernoff confidence bound (0.05905) of level 0.9 from
+#> 15 Phase I observations (estimate 0.04698); with probability at least 0.9 over
+#> the Phase I sample the pre-change class holds with this centre.
 #> • Observations arrive in time order and none was dropped or imputed.
-#> • Under these assumptions the expected time to a false alarm is at least 370,
-#> and the probability of a false alarm by any time t is at most t/370.
+#> • If the Phase I bound holds, the expected time to a false alarm is at least
+#> 370 and the probability of a false alarm by any time t is at most t/370;
+#> without conditioning on Phase I, that probability is at most 0.1 + t/370.
 #> edetect 0.1.0.9000, R version 4.6.1 (2026-06-24)
 ```
 
@@ -93,9 +113,9 @@ edetect_alarm(c_chart)
 #> # A tibble: 1 × 6
 #>   alarm alarm_time evidence threshold change_estimate n_observed
 #>   <lgl>      <int>    <dbl>     <dbl>           <int>      <int>
-#> 1 FALSE         NA     13.0       370              17         30
+#> 1 FALSE         NA     1.98       370              28         30
 max(tidy(c_chart)$evidence)
-#> [1] 17.08296
+#> [1] 2.986468
 autoplot(c_chart)
 ```
 

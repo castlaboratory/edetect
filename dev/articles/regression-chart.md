@@ -92,8 +92,8 @@ edetect_report(periodic)
 #> 
 #> • Pre-change observations have mean equal to 0 and sub-Gaussian tails with
 #> scale 0.3771.
-#> • The centre and the scale was estimated from 100 Phase I observations and is
-#> treated as known.
+#> • The centre was estimated from 100 Phase I observations and is treated as
+#> known (plug-in); the guarantee below does not account for the estimation error.
 #> • Observations arrive in time order and none was dropped or imputed.
 #> • Under these assumptions the expected time to a false alarm is at least 370,
 #> and the probability of a false alarm by any time t is at most t/370.

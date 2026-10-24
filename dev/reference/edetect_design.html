@@ -78,7 +78,8 @@ average run length (ARL) to a false alarm.</p>
 <span>  evalue <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"betting"</span>, <span class="st">"hoeffding"</span><span class="op">)</span>,</span>
 <span>  delta <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  phase1 <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  phase1 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  phase1_beta <span class="op">=</span> <span class="fl">0.1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -150,6 +151,19 @@ uniform.</p></dd>
 (and <code>sigma</code>) when they are not declared; the source is recorded in the
 design and in every report.</p></dd>
 
+
+<dt id="arg-phase-beta">phase1_beta<a class="anchor" aria-label="anchor" href="#arg-phase-beta"></a></dt>
+<dd><p>Probability that the Phase I bound on the centre fails.
+When <code>center</code> is estimated from <code>phase1</code>, the detector is centred at a
+one-sided confidence bound of level <code>1 - phase1_beta</code> (the upper
+bound for <code>"up"</code>, the lower bound for <code>"down"</code>, both bounds at level
+<code>1 - phase1_beta / 2</code> for <code>"both"</code>) rather than at the estimate. With
+probability at least <code>1 - phase1_beta</code> over the Phase I sample the average
+run length is then at least <code>arl</code>, and the probability of a false alarm by
+time <code>t</code> is at most <code>phase1_beta + t / arl</code>. <code>NULL</code> centres the detector at
+the Phase I estimate (plug-in), for which no guarantee holds. Ignored when
+<code>center</code> is declared.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -163,6 +177,30 @@ distribution in it, the expected time to a false alarm is at least <code>arl</co
 alarm by any time <code>t</code>, including data-dependent monitoring horizons, is at
 most <code>t / arl</code> (Ramdas, 2026). The price is paid in detection delay, which
 depends on the alternatives the mixture covers.</p>
+<p>With a centre estimated from Phase I data, the guarantee of an e-detector is
+not robust to estimation error: the Shiryaev–Roberts statistic is a
+martingale plus a linear drift when the pre-change mean equals the centre,
+so its average run length is close to <code>arl</code>, and a centre estimated below
+the in-control mean turns the in-control e-values into evidence. The bounds
+used by <code>phase1_beta</code> are inversions of the e-values of each class. For the
+<code>"bounded"</code> class with <code>evalue = "betting"</code> the bound inverts a betting
+martingale over the Phase I observations in the order given (Waudby-Smith
+and Ramdas, 2024), which adapts to the variance of the data; with
+<code>evalue = "hoeffding"</code> it is the Bernoulli Kullback–Leibler (Chernoff)
+bound after rescaling to <code>[0, 1]</code>. The other classes use the Bernoulli
+Kullback–Leibler bound (<code>"bernoulli"</code>), the Poisson
+Kullback–Leibler bound for <code>"poisson"</code>, and the Gaussian bound with the
+declared scale for <code>"subgaussian"</code>. They require Phase I observations whose
+conditional means equal the in-control mean (independent and identically
+distributed observations are a special case). When <code>sigma</code> is also estimated
+from Phase I, the bound for the <code>"subgaussian"</code> class is approximate.</p>
+<p>The width of a betting bound has two regimes. While the bets adapt to the
+variance it is close to <code>sd * sqrt(2 * log(1 / phase1_beta) / n)</code>; when the
+standard deviation is small compared with the distance from the estimate to
+the far bound, the bets are capped and the width is close to that distance
+times <code>log(1 / phase1_beta) / (0.9 * n)</code>. The design records which one
+applies in <code>bound_regime</code>, and the lag-one autocorrelation of a numeric
+Phase I sample in <code>phase1_acf1</code>; <code><a href="edetect_report.html">edetect_report()</a></code> states both.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -172,6 +210,9 @@ Journal of Statistics in Data Science</em>, 2(2), 229–260.
 <a href="https://doi.org/10.51387/23-NEJSDS51" class="external-link">doi:10.51387/23-NEJSDS51</a></p>
 <p>Ramdas, A. (2026). Universality of e-detectors for ARL control.
 arXiv:2608.12660.</p>
+<p>Waudby-Smith, I. and Ramdas, A. (2024). Estimating means of bounded random
+variables by betting. <em>Journal of the Royal Statistical Society Series B</em>,
+86(1), 1–27. <a href="https://doi.org/10.1093/jrsssb/qkad009" class="external-link">doi:10.1093/jrsssb/qkad009</a></p>
     </div>
 
     <div class="section level2">
@@ -191,15 +232,16 @@ arXiv:2608.12660.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Direction: <span style="color: #0000BB;">"up"</span>; type: <span style="color: #0000BB;">"sr"</span>; target ARL 500 (threshold 500 on the e-detector</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> scale)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Mixture over 7 shifts: 0.049, 0.098, 0.196, 0.343, 0.49, 0.686, 0.882</span>
-<span class="r-in"><span><span class="fu">edetect_design</span><span class="op">(</span>arl <span class="op">=</span> <span class="fl">370</span>, class <span class="op">=</span> <span class="st">"subgaussian"</span>, phase1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, direction <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">edetect_design</span><span class="op">(</span>arl <span class="op">=</span> <span class="fl">370</span>, class <span class="op">=</span> <span class="st">"subgaussian"</span>, phase1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span>, sigma <span class="op">=</span> <span class="fl">1</span>, direction <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">e-detector design</span> <span style="color: #00BBBB;">───────────────────────────────────────────────────────────</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Pre-change class: <span style="color: #0000BB;">"subgaussian"</span>; centre 0.0332 (phase1, n = 100)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Sub-Gaussian scale: 0.9445</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Pre-change class: <span style="color: #0000BB;">"subgaussian"</span>; centre -0.05924 (phase1_bound, n = 100)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Phase I estimate -0.05924; bets centred at 0.1855 and -0.304 (failure</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> probability 0.1)</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Sub-Gaussian scale: 1</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Direction: <span style="color: #0000BB;">"both"</span>; type: <span style="color: #0000BB;">"sr"</span>; target ARL 370 (threshold 370 on the e-detector</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> scale)</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Mixture over 12 shifts: 0.236, 0.472, 0.944, 1.42, 1.89, 2.83, -0.236, -0.472,</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> -0.944, -1.42, -1.89, -2.83</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Mixture over 12 shifts: 0.25, 0.5, 1, 1.5, 2, 3, -0.25, -0.5, -1, -1.5, -2, -3</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

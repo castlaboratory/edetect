@@ -29,7 +29,7 @@ no_change$summary
 #> # A tibble: 1 × 6
 #>   arl_estimate    se censored target_arl n_rep max_t
 #>          <dbl> <dbl>    <dbl>      <dbl> <int> <int>
-#> 1         190.  17.1        0        100   100  3000
+#> 1         196.  15.7        0        100   100  3000
 ```
 
 The guarantee holds for every distribution in the class, not only the
@@ -47,7 +47,7 @@ generators <- list(
   two_point = function(n) rbinom(n, 1, 0.5))
 sapply(generators, function(g) edetect_arl(design_b, pre = g, n_rep = 60, max_t = 3000)$summary$arl_estimate)
 #>   uniform      beta two_point 
-#> 107.26667  99.83333 109.90000
+#>  114.7833  103.7833  124.8833
 ```
 
 ## Measuring the delay
@@ -65,7 +65,7 @@ shift$summary
 #> # A tibble: 1 × 7
 #>   delay_mean    se false_alarm censored change_at n_rep max_t
 #>        <dbl> <dbl>       <dbl>    <dbl>     <int> <int> <int>
-#> 1       6.82 0.390         0.2        0        50   100   500
+#> 1       6.93 0.470        0.15        0        50   100   500
 ```
 
 The delay grows as the shift shrinks. A design whose mixture
@@ -81,9 +81,9 @@ delays <- sapply(c(0.5, 1, 2), function(mu) {
 })
 data.frame(shift = c(0.5, 1, 2), delay = round(delays, 1))
 #>   shift delay
-#> 1   0.5  18.1
+#> 1   0.5  17.6
 #> 2   1.0   7.0
-#> 3   2.0   2.9
+#> 3   2.0   2.5
 ```
 
 ## Shiryaev–Roberts versus CUSUM type
@@ -104,7 +104,7 @@ types <- sapply(c("sr", "cusum"), function(type) {
 })
 round(types, 1)
 #>    sr cusum 
-#>   6.4   8.9
+#>   6.7  10.6
 ```
 
 ## Bounded data: betting versus sub-Bernoulli e-values
@@ -124,5 +124,5 @@ families <- sapply(c("betting", "hoeffding"), function(ev) {
 })
 round(families, 1)
 #>   betting hoeffding 
-#>       7.6      34.6
+#>       6.2      34.4
 ```

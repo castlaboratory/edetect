@@ -125,36 +125,52 @@ from day 23. The first fifteen days serve as Phase I.</p>
 <span><span class="va">p_chart</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/edetect_p.html">edetect_p</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">claims</span><span class="op">$</span><span class="va">defects</span><span class="op">[</span><span class="fl">16</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span>, n <span class="op">=</span> <span class="va">claims</span><span class="op">$</span><span class="va">n</span><span class="op">[</span><span class="fl">16</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span>,</span>
 <span>                     phase1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">claims</span><span class="op">$</span><span class="va">defects</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, n <span class="op">=</span> <span class="va">claims</span><span class="op">$</span><span class="va">n</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span><span class="op">)</span>,</span>
 <span>                     arl <span class="op">=</span> <span class="fl">370</span>, direction <span class="op">=</span> <span class="st">"up"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: Alarm at t = 11; 4 later observations were not consumed.</span></span>
 <span><span class="fu"><a href="../reference/edetect_alarm.html">edetect_alarm</a></span><span class="op">(</span><span class="va">p_chart</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
 <span><span class="co">#&gt;   alarm alarm_time evidence threshold change_estimate n_observed</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TRUE          11    <span style="text-decoration: underline;">2</span>092.       370               8         11</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE         <span style="color: #BB0000;">NA</span>     48.3       370               8         15</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">p_chart</span><span class="op">)</span></span></code></pre></div>
 <p><img src="attribute-charts_files/figure-html/claims-1.png" class="r-plt" alt="" width="672"></p>
-<p>The alarm came at the eleventh Phase II day (day 26), three days
-after the rate rose, and the change is estimated at the eighth Phase II
-day, that is day 23. The Phase I estimate of the rate (0.047) is
-recorded as an assumption of the chart.</p>
+<p>No alarm was raised in the fifteen Phase II days. The chart is
+centred at the upper confidence bound for the Phase I rate (0.0591,
+against an estimate of 0.047), and the rise of the rate from 5% to 9%
+after day 22 leaves only eight days and a shift of about three points
+beyond that bound. Centring the chart at the estimate gives an alarm at
+day 26, three days after the rate rose, but without a guarantee on its
+in-control run length:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/edetect_alarm.html">edetect_alarm</a></span><span class="op">(</span><span class="fu"><a href="../reference/edetect_p.html">edetect_p</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">claims</span><span class="op">$</span><span class="va">defects</span><span class="op">[</span><span class="fl">16</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span>, n <span class="op">=</span> <span class="va">claims</span><span class="op">$</span><span class="va">n</span><span class="op">[</span><span class="fl">16</span><span class="op">:</span><span class="fl">30</span><span class="op">]</span>,</span>
+<span>                        phase1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">claims</span><span class="op">$</span><span class="va">defects</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, n <span class="op">=</span> <span class="va">claims</span><span class="op">$</span><span class="va">n</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>                        arl <span class="op">=</span> <span class="fl">370</span>, direction <span class="op">=</span> <span class="st">"up"</span>, phase1_beta <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Alarm at t = 11; 4 later observations were not consumed.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   alarm alarm_time evidence threshold change_estimate n_observed</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> TRUE          11    <span style="text-decoration: underline;">2</span>092.       370               8         11</span></span></code></pre></div>
+<p>A longer Phase I narrows the bound; <code>phase1_beta</code> trades
+the probability that the bound fails against detection delay, and the
+report states the guarantee that applies.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/edetect_report.html">edetect_report</a></span><span class="op">(</span><span class="va">p_chart</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">──</span> <span style="font-weight: bold;">e-detector report</span> <span style="color: #00BBBB;">───────────────────────────────────────────────────────────</span></span></span>
-<span><span class="co">#&gt; Class <span style="color: #0000BB;">"bernoulli"</span>, centre 0.04698 (phase1); direction <span style="color: #0000BB;">"up"</span>; type <span style="color: #0000BB;">"sr"</span>; target</span></span>
-<span><span class="co">#&gt; ARL 370.</span></span>
-<span><span class="co">#&gt; Observations: 11. Maximum evidence 2090 against a threshold of 370.</span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> Alarm at t = 11 (evidence 2090); estimated change at t = 8.</span></span>
+<span><span class="co">#&gt; Class <span style="color: #0000BB;">"bernoulli"</span>, centre 0.05905 (phase1_bound); direction <span style="color: #0000BB;">"up"</span>; type <span style="color: #0000BB;">"sr"</span>;</span></span>
+<span><span class="co">#&gt; target ARL 370.</span></span>
+<span><span class="co">#&gt; Observations: 15. Maximum evidence 48.3 against a threshold of 370.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> No alarm.</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Assumptions</span> ──</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; • Pre-change trials have conditional success probability at most 0.04698; other</span></span>
+<span><span class="co">#&gt; • Pre-change trials have conditional success probability at most 0.05905; other</span></span>
 <span><span class="co">#&gt; dependence within a subgroup is allowed.</span></span>
-<span><span class="co">#&gt; • The centre was estimated from 15 Phase I observations and is treated as</span></span>
-<span><span class="co">#&gt; known.</span></span>
+<span><span class="co">#&gt; • The centre is the upper Chernoff confidence bound (0.05905) of level 0.9 from</span></span>
+<span><span class="co">#&gt; 15 Phase I observations (estimate 0.04698); with probability at least 0.9 over</span></span>
+<span><span class="co">#&gt; the Phase I sample the pre-change class holds with this centre.</span></span>
 <span><span class="co">#&gt; • Observations arrive in time order and none was dropped or imputed.</span></span>
-<span><span class="co">#&gt; • Under these assumptions the expected time to a false alarm is at least 370,</span></span>
-<span><span class="co">#&gt; and the probability of a false alarm by any time t is at most t/370.</span></span>
+<span><span class="co">#&gt; • If the Phase I bound holds, the expected time to a false alarm is at least</span></span>
+<span><span class="co">#&gt; 370 and the probability of a false alarm by any time t is at most t/370;</span></span>
+<span><span class="co">#&gt; without conditioning on Phase I, that probability is at most 0.1 + t/370.</span></span>
 <span><span class="co">#&gt; <span style="font-style: italic;">edetect 0.1.0.9000, R version 4.6.1 (2026-06-24)</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -164,16 +180,16 @@ recorded as an assumption of the chart.</p>
 are counted; the process is stable with a mean of about 6. The first
 twenty boards serve as Phase I. A stable process should produce no
 alarm, and the evidence should stay far from the threshold.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">defects</span> <span class="op">&lt;-</span> <span class="fu">shewhartr</span><span class="fu">::</span><span class="va"><a href="https://castlaboratory.github.io/shewhartr/reference/pcb_solder.html" class="external-link">pcb_solder</a></span><span class="op">$</span><span class="va">defects</span></span>
 <span><span class="va">c_chart</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/edetect_c.html">edetect_c</a></span><span class="op">(</span><span class="va">defects</span><span class="op">[</span><span class="fl">21</span><span class="op">:</span><span class="fl">50</span><span class="op">]</span>, phase1 <span class="op">=</span> <span class="va">defects</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">20</span><span class="op">]</span>, arl <span class="op">=</span> <span class="fl">370</span>, direction <span class="op">=</span> <span class="st">"both"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/edetect_alarm.html">edetect_alarm</a></span><span class="op">(</span><span class="va">c_chart</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
 <span><span class="co">#&gt;   alarm alarm_time evidence threshold change_estimate n_observed</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE         <span style="color: #BB0000;">NA</span>     13.0       370              17         30</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE         <span style="color: #BB0000;">NA</span>     1.98       370              28         30</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html" class="external-link">tidy</a></span><span class="op">(</span><span class="va">c_chart</span><span class="op">)</span><span class="op">$</span><span class="va">evidence</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 17.08296</span></span>
+<span><span class="co">#&gt; [1] 2.986468</span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/autoplot.html" class="external-link">autoplot</a></span><span class="op">(</span><span class="va">c_chart</span><span class="op">)</span></span></code></pre></div>
 <p><img src="attribute-charts_files/figure-html/pcb-1.png" class="r-plt" alt="" width="672"></p>
 </div>
@@ -184,7 +200,7 @@ alarm, and the evidence should stay far from the threshold.</p>
 sample is monitored per board inspected: the exposure <code>n</code> is
 the number of boards. The rate per board is declared from the
 specification (6 defects per board).</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">sizes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="fl">4</span>, <span class="fl">20</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="va">sizes</span> <span class="op">&lt;-</span> <span class="va">sizes</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">sizes</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">50</span><span class="op">]</span></span>
