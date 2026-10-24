@@ -27,7 +27,7 @@ navbar:
 
 reference:
 - title: Design and run a detector
-  contents: [edetect_classes, edetect_design, edetect_init, edetect_update, edetect_restart]
+  contents: [edetect_classes, edetect_design, edetect_init, edetect_update, edetect_restart, edetect_batch_means]
 - title: Charts
   contents: [edetect_x, edetect_p, edetect_c, edetect_u, edetect_regression]
 - title: Results

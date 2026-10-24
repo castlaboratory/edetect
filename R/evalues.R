@@ -4,23 +4,24 @@
 # matrix of log e-values (one row per bet, one column per observation). Every
 # family satisfies E[e] <= 1 under the pre-change class for the sign of lambda
 # that matches the direction (positive: mean at most the centre; negative: mean
-# at least the centre).
+# at least the centre). Each bet has its own centre (`center_k`), which differs
+# between the two sides when the centre comes from a Phase I bound.
 
 log_evalues <- function(design, x, n = 1) {
   lam <- design$lambda
-  c0 <- design$center
+  c0 <- design$center_k %||% design$center
   if (length(n) == 1L) n <- rep(n, length(x))
   switch(design$class,
     bounded = {
       a <- design$bounds[1]; b <- design$bounds[2]
       z <- (x - a) / (b - a); m0 <- (c0 - a) / (b - a)
       if (design$evalue == "betting") {
-        log1p(outer(lam, z - m0))
+        log1p(outer(lam, z) - lam * m0)
       } else {
         outer(lam, z) - log(1 - m0 + m0 * exp(lam))
       }
     },
-    subgaussian = outer(lam, x - c0) - lam^2 * design$sigma^2 / 2,
+    subgaussian = outer(lam, x) - lam * c0 - lam^2 * design$sigma^2 / 2,
     bernoulli = outer(lam, x) - outer(log(1 - c0 + c0 * exp(lam)), n),
     poisson = outer(lam, x) - outer(c0 * (exp(lam) - 1), n)
   )
@@ -36,12 +37,14 @@ log_sum_exp <- function(a, b) {
 }
 
 # log of the weighted mixture sum(w_k exp(log_m_k)); log_m may be a matrix with
-# one column per stream.
+# one column per stream. The column maxima are taken row by row with pmax, which
+# is much faster than apply() when there are many streams.
 log_mix <- function(log_w, log_m) {
   v <- log_w + log_m
   if (is.matrix(v)) {
-    m <- apply(v, 2, max)
-    out <- m + log(colSums(exp(sweep(v, 2, m, "-"))))
+    m <- v[1, ]
+    for (i in seq_len(nrow(v))[-1]) m <- pmax(m, v[i, ])
+    out <- m + log(colSums(exp(v - rep(m, each = nrow(v)))))
     out[is.infinite(m) & m < 0] <- -Inf
     return(out)
   }

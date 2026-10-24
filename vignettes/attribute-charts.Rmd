@@ -48,10 +48,24 @@ edetect_alarm(p_chart)
 autoplot(p_chart)
 ```
 
-The alarm came at the eleventh Phase II day (day 26), three days after the
-rate rose, and the change is estimated at the eighth Phase II day, that is
-day 23. The Phase I estimate of the rate (`r round(p_chart$design$center, 4)`)
-is recorded as an assumption of the chart.
+No alarm was raised in the fifteen Phase II days. The chart is centred at the
+upper confidence bound for the Phase I rate (`r round(p_chart$design$center, 4)`,
+against an estimate of
+`r round(p_chart$design$center_bounds[["estimate"]], 4)`), and the rise of the
+rate from 5% to 9% after day 22 leaves only eight days and a shift of about
+three points beyond that bound. Centring the chart at the estimate gives an
+alarm at day 26, three days after the rate rose, but without a guarantee on
+its in-control run length:
+
+```{r claims-plugin}
+edetect_alarm(edetect_p(x = claims$defects[16:30], n = claims$n[16:30],
+                        phase1 = data.frame(x = claims$defects[1:15], n = claims$n[1:15]),
+                        arl = 370, direction = "up", phase1_beta = NULL))
+```
+
+A longer Phase I narrows the bound; `phase1_beta` trades the probability that
+the bound fails against detection delay, and the report states the guarantee
+that applies.
 
 ```{r claims-report}
 edetect_report(p_chart)

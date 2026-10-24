@@ -37,6 +37,11 @@ paper/**/*.blg
 paper/**/*_files/
 paper/**/*.knit.md
 paper/**/*.zip
+paper/**/*.fls
+paper/**/*.fdb_latexmk
+paper/**/*.synctex.gz
+paper/**/main.pdf
+paper/**/supplement.pdf
 
 # Local-only material: Claude Code context, individual plan, working memory,
 # bibliography PDFs. A fresh clone does not have these.

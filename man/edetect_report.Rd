@@ -10,13 +10,21 @@ edetect_report(state)
 \item{state}{An \code{edetect_chart}.}
 }
 \value{
-A list of class \code{edetect_report}.
+A list of class \code{edetect_report}, including \code{assumptions} and
+\code{phase1_checks} (character vectors).
 }
 \description{
 Everything a reader needs to audit an alarm or its absence: what was assumed
 (class, centre and its source, bounds or scale, direction), how the detector
 was built (type, e-value family, mixture), what was observed, the outcome and
 the software versions.
+}
+\details{
+When the centre was estimated from a numeric Phase I sample, the report also
+lists Phase I checks: the lag-one autocorrelation of the sample (positive
+autocorrelation around the centre is outside every class of the package),
+and, for a betting bound, whether its width is set by the variance of the
+data or by the declared bounds.
 }
 \examples{
 design <- edetect_design(arl = 100, class = "bernoulli", center = 0.05)

@@ -166,8 +166,15 @@ edetect_alarm <- function(state) {
 #' was built (type, e-value family, mixture), what was observed, the outcome and
 #' the software versions.
 #'
+#' When the centre was estimated from a numeric Phase I sample, the report also
+#' lists Phase I checks: the lag-one autocorrelation of the sample (positive
+#' autocorrelation around the centre is outside every class of the package),
+#' and, for a betting bound, whether its width is set by the variance of the
+#' data or by the declared bounds.
+#'
 #' @param state An `edetect_chart`.
-#' @return A list of class `edetect_report`.
+#' @return A list of class `edetect_report`, including `assumptions` and
+#'   `phase1_checks` (character vectors).
 #' @export
 #' @examples
 #' design <- edetect_design(arl = 100, class = "bernoulli", center = 0.05)
@@ -187,12 +194,26 @@ edetect_report <- function(state) {
                           direction_word(d$direction), format(signif(d$center, 4))),
       poisson = sprintf("Pre-change counts are sub-Poisson with rate %s %s per unit exposure (no overdispersion).",
                         direction_word(d$direction), format(signif(d$center, 4)))),
-    if (d$center_source == "phase1") sprintf("The centre%s was estimated from %d Phase I observations and is treated as known.",
-                                             if (d$class == "subgaussian") " and the scale" else "", d$n_phase1)
-    else "The centre was declared by the user.",
+    switch(d$center_source,
+      declared = "The centre was declared by the user.",
+      phase1 = sprintf("The centre was estimated from %d Phase I observations and is treated as known (plug-in); the guarantee below does not account for the estimation error.", d$n_phase1),
+      phase1_bound = phase1_sentence(d)),
+    if (identical(d$sigma_source, "phase1")) "The sub-Gaussian scale was estimated from Phase I and is treated as known.",
     "Observations arrive in time order and none was dropped or imputed.",
-    sprintf("Under these assumptions the expected time to a false alarm is at least %s, and the probability of a false alarm by any time t is at most t/%s.",
-            format(d$arl), format(d$arl))
+    if (d$center_source == "phase1_bound") {
+      sprintf("If the Phase I bound holds, the expected time to a false alarm is at least %s and the probability of a false alarm by any time t is at most t/%s; without conditioning on Phase I, that probability is at most %s + t/%s.",
+              format(d$arl), format(d$arl), format(d$phase1_beta), format(d$arl))
+    } else {
+      sprintf("Under these assumptions the expected time to a false alarm is at least %s, and the probability of a false alarm by any time t is at most t/%s.",
+              format(d$arl), format(d$arl))
+    }
+  )
+  acf1 <- d$phase1_acf1 %||% NA_real_
+  checks <- c(
+    if (!is.na(acf1)) paste0(sprintf("The lag-one autocorrelation of the Phase I sample is %.2f.", acf1),
+      if (acf1 > 0.2) " Positive autocorrelation around the centre is outside the class and can shorten the time to a false alarm; consider monitoring batch means (see edetect_batch_means())." else ""),
+    if (identical(d$bound_regime, "range"))
+      "The width of the Phase I bound is set by the declared bounds, not by the variance of the data: bounds closer to the data, fixed before seeing them, would narrow the band of undetectable shifts."
   )
   structure(list(
     class = d$class, center = d$center, center_source = d$center_source, n_phase1 = d$n_phase1,
@@ -203,8 +224,19 @@ edetect_report <- function(state) {
     change_estimate = al$change_estimate,
     max_evidence = if (nrow(state$trajectory)) max(state$trajectory$evidence) else 0,
     n_runs_before = length(state$runs %||% list()),
-    assumptions = assumptions, versions = state$versions, created = d$created
+    assumptions = assumptions, phase1_checks = checks, versions = state$versions, created = d$created
   ), class = "edetect_report")
+}
+
+phase1_sentence <- function(d) {
+  cb <- d$center_bounds
+  side <- switch(d$direction, up = "upper", down = "lower", both = "lower and upper")
+  level <- if (d$direction == "both") 1 - d$phase1_beta / 2 else 1 - d$phase1_beta
+  used <- cb[c("lower", "upper")]
+  used <- paste(format(signif(used[!is.na(used)], 4)), collapse = " and ")
+  how <- if (d$class == "bounded" && d$evalue == "betting") "betting" else "Chernoff"
+  sprintf("The centre is the %s %s confidence bound (%s) of level %s from %d Phase I observations (estimate %s); with probability at least %s over the Phase I sample the pre-change class holds with this centre.",
+          side, how, used, format(level), d$n_phase1, format(signif(cb[["estimate"]], 4)), format(1 - d$phase1_beta))
 }
 
 direction_word <- function(direction) {
@@ -223,6 +255,10 @@ print.edetect_report <- function(x, ...) {
   }
   cli::cli_h2("Assumptions")
   cli::cli_ul(x$assumptions)
+  if (length(x$phase1_checks)) {
+    cli::cli_h2("Phase I checks")
+    cli::cli_ul(x$phase1_checks)
+  }
   cli::cli_text("{.emph edetect {x$versions$edetect}, {x$versions$R}}")
   invisible(x)
 }

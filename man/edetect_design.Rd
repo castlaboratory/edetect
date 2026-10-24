@@ -15,7 +15,8 @@ edetect_design(
   evalue = c("betting", "hoeffding"),
   delta = NULL,
   weights = NULL,
-  phase1 = NULL
+  phase1 = NULL,
+  phase1_beta = 0.1
 )
 }
 \arguments{
@@ -61,6 +62,17 @@ uniform.}
 (counts) and \code{n} for \code{"bernoulli"} and \code{"poisson"}. Used to set \code{center}
 (and \code{sigma}) when they are not declared; the source is recorded in the
 design and in every report.}
+
+\item{phase1_beta}{Probability that the Phase I bound on the centre fails.
+When \code{center} is estimated from \code{phase1}, the detector is centred at a
+one-sided confidence bound of level \code{1 - phase1_beta} (the upper
+bound for \code{"up"}, the lower bound for \code{"down"}, both bounds at level
+\code{1 - phase1_beta / 2} for \code{"both"}) rather than at the estimate. With
+probability at least \code{1 - phase1_beta} over the Phase I sample the average
+run length is then at least \code{arl}, and the probability of a false alarm by
+time \code{t} is at most \code{phase1_beta + t / arl}. \code{NULL} centres the detector at
+the Phase I estimate (plug-in), for which no guarantee holds. Ignored when
+\code{center} is declared.}
 }
 \value{
 An object of class \code{edetect_design}.
@@ -79,11 +91,37 @@ distribution in it, the expected time to a false alarm is at least \code{arl}
 alarm by any time \code{t}, including data-dependent monitoring horizons, is at
 most \code{t / arl} (Ramdas, 2026). The price is paid in detection delay, which
 depends on the alternatives the mixture covers.
+
+With a centre estimated from Phase I data, the guarantee of an e-detector is
+not robust to estimation error: the Shiryaev--Roberts statistic is a
+martingale plus a linear drift when the pre-change mean equals the centre,
+so its average run length is close to \code{arl}, and a centre estimated below
+the in-control mean turns the in-control e-values into evidence. The bounds
+used by \code{phase1_beta} are inversions of the e-values of each class. For the
+\code{"bounded"} class with \code{evalue = "betting"} the bound inverts a betting
+martingale over the Phase I observations in the order given (Waudby-Smith
+and Ramdas, 2024), which adapts to the variance of the data; with
+\code{evalue = "hoeffding"} it is the Bernoulli Kullback--Leibler (Chernoff)
+bound after rescaling to \verb{[0, 1]}. The other classes use the Bernoulli
+Kullback--Leibler bound (\code{"bernoulli"}), the Poisson
+Kullback--Leibler bound for \code{"poisson"}, and the Gaussian bound with the
+declared scale for \code{"subgaussian"}. They require Phase I observations whose
+conditional means equal the in-control mean (independent and identically
+distributed observations are a special case). When \code{sigma} is also estimated
+from Phase I, the bound for the \code{"subgaussian"} class is approximate.
+
+The width of a betting bound has two regimes. While the bets adapt to the
+variance it is close to \code{sd * sqrt(2 * log(1 / phase1_beta) / n)}; when the
+standard deviation is small compared with the distance from the estimate to
+the far bound, the bets are capped and the width is close to that distance
+times \code{log(1 / phase1_beta) / (0.9 * n)}. The design records which one
+applies in \code{bound_regime}, and the lag-one autocorrelation of a numeric
+Phase I sample in \code{phase1_acf1}; \code{\link[=edetect_report]{edetect_report()}} states both.
 }
 \examples{
 edetect_design(arl = 370, class = "bounded", center = 0.5, bounds = c(0, 1))
 edetect_design(arl = 500, class = "bernoulli", center = 0.02, direction = "up")
-edetect_design(arl = 370, class = "subgaussian", phase1 = rnorm(100), direction = "both")
+edetect_design(arl = 370, class = "subgaussian", phase1 = rnorm(100), sigma = 1, direction = "both")
 }
 \references{
 Shin, J., Ramdas, A. and Rinaldo, A. (2024). E-detectors: a
@@ -93,4 +131,8 @@ Journal of Statistics in Data Science}, 2(2), 229--260.
 
 Ramdas, A. (2026). Universality of e-detectors for ARL control.
 arXiv:2608.12660.
+
+Waudby-Smith, I. and Ramdas, A. (2024). Estimating means of bounded random
+variables by betting. \emph{Journal of the Royal Statistical Society Series B},
+86(1), 1--27. \doi{10.1093/jrsssb/qkad009}
 }

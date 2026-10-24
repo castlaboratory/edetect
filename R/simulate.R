@@ -34,36 +34,48 @@ edetect_arl <- function(design, pre, post = NULL, change_at = 1L, n_rep = 200L, 
   if (is.null(max_t)) max_t <- as.integer(min(20 * design$arl, 1e5))
   max_t <- check_count(max_t, "max_t")
   if (!is.null(post) && change_at > max_t) cli::cli_abort("{.arg change_at} must not exceed {.arg max_t}.")
+  is_count <- design$class %in% c("bernoulli", "poisson")
   stream <- function(gen, n) {
     s <- gen(n)
-    if (design$class %in% c("bernoulli", "poisson")) {
+    if (is_count) {
       if (!is.data.frame(s) || !all(c("x", "n") %in% names(s))) cli::cli_abort("The generator must return a data frame with columns {.field x} and {.field n} for the {.val {design$class}} class.")
       list(x = s$x, n = s$n)
     } else list(x = as.numeric(s), n = rep(1, n))
   }
-  x <- matrix(0, max_t, n_rep); nn <- matrix(1, max_t, n_rep)
-  for (r in seq_len(n_rep)) {
-    if (is.null(post)) {
-      s <- stream(pre, max_t)
-    } else {
-      s2 <- stream(post, max_t - change_at + 1L)
-      s <- if (change_at > 1L) { s1 <- stream(pre, change_at - 1L); list(x = c(s1$x, s2$x), n = c(s1$n, s2$n)) } else s2
-    }
-    x[, r] <- s$x; nn[, r] <- s$n
+  # Observations for times t0..t1 of one replication: pre-change before
+  # change_at, post-change from change_at on.
+  segment <- function(t0, t1) {
+    if (is.null(post) || t1 < change_at) return(stream(pre, t1 - t0 + 1L))
+    if (t0 >= change_at) return(stream(post, t1 - t0 + 1L))
+    s1 <- stream(pre, change_at - t0); s2 <- stream(post, t1 - change_at + 1L)
+    list(x = c(s1$x, s2$x), n = c(s1$n, s2$n))
   }
+  # Streams are generated in blocks for the replications still running, so
+  # memory grows with the block length rather than with max_t.
+  block <- min(max_t, 1000L)
   k <- length(design$lambda); log_w <- log(design$weights); log_arl <- log(design$arl)
   log_sr <- matrix(-Inf, k, n_rep); log_cu <- matrix(-Inf, k, n_rep)
   run_length <- rep(NA_integer_, n_rep); active <- rep(TRUE, n_rep)
-  for (t in seq_len(max_t)) {
-    idx <- which(active)
-    le <- log_evalues(design, x[t, idx], nn[t, idx])
-    log_sr[, idx] <- log_sum_exp(0, log_sr[, idx, drop = FALSE]) + le
-    log_cu[, idx] <- pmax(0, log_cu[, idx, drop = FALSE]) + le
-    lm <- if (design$type == "sr") log_sr[, idx, drop = FALSE] else log_cu[, idx, drop = FALSE]
-    stat <- log_mix(log_w, lm)
-    hit <- stat >= log_arl
-    run_length[idx[hit]] <- t
-    active[idx[hit]] <- FALSE
+  for (t0 in seq(1L, max_t, by = block)) {
+    t1 <- min(t0 + block - 1L, max_t)
+    ids <- which(active)
+    x <- matrix(0, t1 - t0 + 1L, n_rep); nn <- matrix(1, t1 - t0 + 1L, n_rep)
+    for (r in ids) {
+      s <- segment(t0, t1)
+      x[, r] <- s$x; nn[, r] <- s$n
+    }
+    for (t in t0:t1) {
+      idx <- which(active)
+      le <- log_evalues(design, x[t - t0 + 1L, idx], nn[t - t0 + 1L, idx])
+      log_sr[, idx] <- log_sum_exp(0, log_sr[, idx, drop = FALSE]) + le
+      log_cu[, idx] <- pmax(0, log_cu[, idx, drop = FALSE]) + le
+      lm <- if (design$type == "sr") log_sr[, idx, drop = FALSE] else log_cu[, idx, drop = FALSE]
+      stat <- log_mix(log_w, lm)
+      hit <- stat >= log_arl
+      run_length[idx[hit]] <- t
+      active[idx[hit]] <- FALSE
+      if (!any(active)) break
+    }
     if (!any(active)) break
   }
   alarm <- !is.na(run_length)
